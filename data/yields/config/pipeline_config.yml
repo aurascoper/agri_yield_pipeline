@@ -1,0 +1,56 @@
+noaa_api:
+  # Base URL and access token for NOAA weather data
+  base_url: ${NOAA_API_URL:-https://www.ncdc.noaa.gov/cdo-web/api/v2}
+  token: ${NOAA_API_TOKEN}
+  # Rate limit per minute
+  rate_limit_per_minute: 60
+
+usda_quick_stats:
+  # Base URL and API key for USDA Quick Stats
+  base_url: ${USDA_API_URL:-https://quickstats.nass.usda.gov/api/api_GET}
+  key: ${USDA_API_KEY}
+
+kafka:
+  # Kafka broker connection settings
+  brokers: ${KAFKA_BROKERS:-localhost:9092}
+  # Topics for incoming weather and yield data
+  topic_weather: weather_data
+  topic_yield: yield_data
+  # Consumer group ID for processing
+  group_id: real_time_processor
+  # Schema registry for Avro serialization
+  schema_registry_url: ${SCHEMA_REGISTRY_URL:-http://localhost:8081}
+
+influxdb:
+  # Connection settings for InfluxDB
+  url: ${INFLUXDB_URL:-http://localhost:8086}
+  token: ${INFLUXDB_TOKEN}
+  org: ${INFLUXDB_ORG:-my-org}
+  bucket: ${INFLUXDB_BUCKET:-agri_data}
+
+redis:
+  # Redis cache settings
+  host: ${REDIS_HOST:-localhost}
+  port: ${REDIS_PORT:-6379}
+  db: ${REDIS_DB:-0}
+  # Default TTL for cached queries (in seconds)
+  ttl_seconds: 30
+
+visualization:
+  # Geographical bounding box for Missouri counties map
+  bounding_box:
+    north: 40.6    # Latitude northern bound
+    south: 36.9    # Latitude southern bound
+    east: -89.1    # Longitude eastern bound
+    west: -95.8    # Longitude western bound
+  # Dashboard update frequency in seconds
+  update_frequency_seconds: 30
+  # Port for the Dash server
+  port: ${DASHBOARD_PORT:-8050}
+
+thresholds:
+  # Alerting thresholds
+  drought:
+    precipitation_mm: 2          # Max mm of precipitation per day
+    consecutive_days: 3         # Days below threshold triggers drought
+  soil_moisture_rolling_interval_minutes: 5

@@ -1,0 +1,53 @@
+###############################################
+# Pipeline Configuration for Real-Time System
+###############################################
+
+noaa:
+  token: "YOUR_NOAA_API_TOKEN"
+  dataset_id: "GHCND"
+  station_id: "GHCND:USW00003952"
+  limit: 1000
+  bounding_box:
+    west: -95.77
+    south: 35.0
+    east: -89.1
+    north: 40.6
+  date_range:
+    start: "2021-01-01"
+    end:   "2021-12-31"
+
+usda:
+  api_key: "YOUR_USDA_API_KEY"
+  endpoint: "https://quickstats.nass.usda.gov/api/api_GET/"
+  commodity_desc: "CORN"
+  agg_level_desc: "STATE"
+  state_name: "MISSOURI"
+
+kafka:
+  bootstrap_servers: "localhost:9092"
+  group_id:          "agri_processor"
+  topics:
+    weather:   "noaa_weather"
+    yield:     "usda_yield"
+    enriched:  "enriched_yield"
+
+influxdb:
+  url:    "http://localhost:8086"
+  token:  "YOUR_INFLUXDB_TOKEN"
+  org:    "YOUR_INFLUXDB_ORG"
+  bucket: "YOUR_INFLUXDB_BUCKET"
+
+redis:
+  url: "redis://localhost:6379/0"
+  keys:
+    weather: "weather_data"
+    yield:   "yield_data"
+    alerts:  "alerts"
+
+visualization:
+  update_interval_seconds: 30
+  alert_thresholds:
+    precipitation:
+      drought: 1.0
+      flood:   20.0
+###############################################

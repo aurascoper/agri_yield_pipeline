@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - '2181:2181'
+    networks:
+      - agri-net
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - '9092:9092'
+    networks:
+      - agri-net
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - '6379:6379'
+    networks:
+      - agri-net
+
+  influxdb:
+    image: influxdb:2.6
+    container_name: influxdb
+    env_file:
+      - .env
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - influxdb-init:/docker-entrypoint-initdb.d
+    ports:
+      - '8086:8086'
+    environment:
+      INFLUXDB_INIT_MODE: setup
+      INFLUXDB_INIT_USERNAME: ${INFLUXDB_INIT_USERNAME:-admin}
+      INFLUXDB_INIT_PASSWORD: ${INFLUXDB_INIT_PASSWORD:-password}
+      INFLUXDB_INIT_ORG: ${INFLUXDB_INIT_ORG:-my-org}
+      INFLUXDB_INIT_BUCKET: ${INFLUXDB_INIT_BUCKET:-my-bucket}
+      INFLUXDB_INIT_RETENTION: 0
+      INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_INIT_ADMIN_TOKEN:-my-token}
+    networks:
+      - agri-net
+
+  dash-app:
+    image: python:3.9-slim
+    container_name: dash-app
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: python3 src/visualization/live_dashboard.py
+    ports:
+      - '8050:8050'
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - influxdb
+      - kafka
+    networks:
+      - agri-net
+
+networks:
+  agri-net:
+    driver: bridge
+
+volumes:
+  influxdb-data:
+  influxdb-init:
