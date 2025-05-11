@@ -1,0 +1,139 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - '2181:2181'
+    networks:
+      - agri-net
+    healthcheck:
+      test: ["CMD-SHELL", "echo ruok | nc -w 5 localhost 2181 | grep -q imok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - '9092:9092'
+    networks:
+      - agri-net
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 9092"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - '6379:6379'
+    networks:
+      - agri-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-alerts}
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - agri-net
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  influxdb:
+    image: influxdb:2.4
+    container_name: influxdb
+    env_file: .env
+    environment:
+      INFLUXDB_INIT_MODE: setup
+      INFLUXDB_INIT_USERNAME: ${INFLUXDB_INIT_USERNAME:-admin}
+      INFLUXDB_INIT_PASSWORD: ${INFLUXDB_INIT_PASSWORD:-password}
+      INFLUXDB_INIT_ORG: ${INFLUXDB_ORG}
+      INFLUXDB_INIT_BUCKET: ${INFLUXDB_BUCKET}
+      INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN}
+    ports:
+      - '8086:8086'
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    networks:
+      - agri-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8086/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  dash-app:
+    image: python:3.9-slim
+    container_name: dash-app
+    env_file: .env
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: ["bash", "-c", "pip install --no-cache-dir dash dash-leaflet plotly pandas redis influxdb-client python-dotenv && python src/visualization/live_dashboard.py"]
+    ports:
+      - '8050:8050'
+    depends_on:
+      - influxdb
+      - redis
+      - kafka
+      - postgres
+    networks:
+      - agri-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8050/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  stream-processor:
+    image: python:3.9-slim
+    container_name: stream-processor
+    env_file: .env
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: ["bash", "-c", "pip install --no-cache-dir confluent-kafka avro-python3 python-dotenv psycopg2-binary && python src/processing/stream_processor.py"]
+    depends_on:
+      - kafka
+    networks:
+      - agri-net
+
+networks:
+  agri-net:
+    driver: bridge
+
+volumes:
+  influxdb_data:
+  pgdata:

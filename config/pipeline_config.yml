@@ -1,0 +1,66 @@
+###############################################
+# Pipeline Configuration
+# Override defaults via environment variables (Bash ${VAR:-default} syntax)
+###############################################
+
+# NOAA API settings
+noaa:
+  token: "${NOAA_TOKEN:-YOUR_NOAA_API_TOKEN}"       # NOAA API token
+  dataset_id: "${NOAA_DATASET_ID:-GHCND}"           # NOAA dataset ID
+  station_id: "${NOAA_STATION_ID:-GHCND:USW00003952}" # Example station in Missouri
+  limit: ${NOAA_LIMIT:-1000}                          # Max records per request
+  bounding_box:                                      # [west, south, east, north]
+    west: ${BBOX_WEST:--95.77}
+    south: ${BBOX_SOUTH:-35.0}
+    east: ${BBOX_EAST:--89.1}
+    north: ${BBOX_NORTH:-40.6}
+  date_range:
+    start: "${START_DATE:-2021-01-01}"               # Analysis start date
+    end:   "${END_DATE:-2021-12-31}"                 # Analysis end date
+
+# USDA QuickStats API settings
+usda:
+  api_key: "${USDA_API_KEY:-YOUR_USDA_API_KEY}"      # USDA API key
+  endpoint: "${USDA_API_ENDPOINT:-https://quickstats.nass.usda.gov/api/api_GET/}"  # USDA API endpoint
+  commodity_desc: "${COMMODITY_DESC:-CORN}"          # Commodity filter
+  agg_level_desc: "${AGG_LEVEL_DESC:-STATE}"         # Aggregation level
+  state_name: "${STATE_NAME:-MISSOURI}"              # State filter
+
+# Kafka configuration
+kafka:
+  bootstrap_servers: "${KAFKA_BOOTSTRAP_SERVERS:-localhost:9092}"  # Kafka brokers
+  group_id:          "${KAFKA_GROUP_ID:-agri_processor}"          # Kafka consumer group
+  topics:
+    weather:   "${KAFKA_WEATHER_TOPIC:-noaa_weather}"             # Weather topic
+    yield:     "${KAFKA_YIELD_TOPIC:-usda_yield}"               # Yield topic
+    enriched:  "${KAFKA_OUTPUT_TOPIC:-enriched_yield}"           # Enriched yield topic
+    metrics:   "${KAFKA_METRICS_TOPIC:-stream_metrics}"          # Monitoring metrics topic
+
+# InfluxDB v2 settings
+influxdb:
+  url:    "${INFLUXDB_URL:-http://localhost:8086}"                 # InfluxDB URL
+  token:  "${INFLUXDB_TOKEN:-YOUR_INFLUXDB_TOKEN}"                # InfluxDB token
+  org:    "${INFLUXDB_ORG:-YOUR_INFLUXDB_ORG}"                    # InfluxDB organization
+  bucket: "${INFLUXDB_BUCKET:-YOUR_INFLUXDB_BUCKET}"              # InfluxDB bucket
+
+# Redis settings for caching and alerts
+redis:
+  url: "${REDIS_URL:-redis://localhost:6379/0}"                   # Redis connection URL
+  keys:
+    weather: "${REDIS_WEATHER_KEY:-weather_data}"                 # Key for weather cache
+    yield:   "${REDIS_YIELD_KEY:-yield_data}"                     # Key for yield cache
+    ndvi:    "${REDIS_NDVI_KEY:-ndvi_data}"                       # Key for NDVI cache
+    alerts:  "${REDIS_ALERTS_KEY:-alerts}"                        # Key for alert list
+
+# Alert thresholds for monitoring and processing
+alerts:
+  metrics:
+    lag:         ${LAG_THRESHOLD:-1000}          # Max Kafka consumer lag before alert
+    error_rate:  ${ERROR_RATE_THRESHOLD:-0.05}    # Max error rate fraction before alert
+  weather:
+    drought:     ${DROUGHT_THRESHOLD:-1.0}        # Precipitation (mm) threshold for drought
+    flood:       ${FLOOD_THRESHOLD:-20.0}         # Precipitation (mm) threshold for flood
+
+# Visualization settings
+visualization:
+  update_interval_seconds: ${UPDATE_INTERVAL_SECONDS:-30}  # Dashboard refresh interval
