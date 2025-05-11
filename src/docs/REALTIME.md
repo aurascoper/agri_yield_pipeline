@@ -1,142 +1,129 @@
-# Real-Time Data Ingestion, Processing, Visualization & Alerting Pipeline
+# Real-Time Agricultural Pipeline
+> End-to-end system for ingesting, processing, visualizing, and alerting on NDVI, weather, and yield data.
 
-## 1. Architecture Overview
+## 1. Architecture
 
 ```mermaid
-graph TD
-  A[NOAA & USDA APIs] -->|Async Ingestion| B(InfluxDB)
-  A -->|Async Ingestion| C(Kafka)
+graph LR
+  subgraph Ingestion
+    NOAA[NOAA & USDA Ingestors]
+    NOAA -->|write| KafkaWeather[Kafka: weather]
+    NOAA -->|write| KafkaYield[Kafka: yield]
+    NOAA -->|write| InfluxDB[(InfluxDB)]
+  end
+
   subgraph Processing
-    C --> D[Stream Processor]
-    D -->|Enriched Yield| C
-    D -->|Alerts| E[Redis]
+    KafkaWeather --> StreamProc[Stream Processor]
+    KafkaYield --> StreamProc
+    StreamProc -->|write| KafkaEnriched[Kafka: enriched_yield]
+    StreamProc -->|write| InfluxDB
+    StreamProc -->|cache alerts| Redis[(Redis)]
+    StreamProc -->|publish metrics| KafkaMetrics[Kafka: stream_metrics]
   end
+
+  subgraph Monitoring
+    KafkaMetrics --> Monitor[StreamMonitor]
+    Monitor -->|SMS| Twilio[Twilio]
+    Monitor -->|log| Postgres[(PostgreSQL)]
+  end
+
   subgraph Visualization
-    F[Dash App] -->|Read Cache| E
-    F -->|Query Time Series| B
-  end
-  subgraph Alerting
-    D --> G[Alert Manager]
-    G -->|SMS| H[Twilio]
-    G -->|Log| I[PostgreSQL]
+    Dash[Dash App] -->|query| InfluxDB
+    Dash -->|cache| Redis
   end
 ```
 
-This pipeline enables real-time ingestion of weather and yield data, stream processing for enrichment and anomaly detection, time-series storage in InfluxDB, live dashboarding via Dash, and health alerting through SMS and database logging.
+---
+## 2. Prerequisites
+- Docker & Docker Compose (v3.8+)
+- Python ≥3.9 for local dev (for non-container workflows)
+- `.env` file (copy from `.env.template` and fill in secrets)
+- `config/pipeline_config.yml` for API, Kafka, InfluxDB, Redis, and alerts
 
 ---
+## 3. Kafka & Ingestor Setup
+1. Start Zookeeper & Kafka:
+   ```bash
+   docker-compose up -d zookeeper kafka
+   ```
+2. Create required topics:
+   ```bash
+   for topic in noaa_weather usda_yield enriched_yield stream_metrics; do
+     docker exec kafka \  
+       kafka-topics --create --topic $topic \
+         --bootstrap-server kafka:9092 --partitions 3 --replication-factor 1
+   done
+   ```
 
-## 2. Configuration
-
-- Primary YAML: `config/pipeline_config.yml` defines:
-  - NOAA & USDA API settings
-  - Kafka bootstrap servers & topic names
-  - InfluxDB connection (URL, token, org, bucket)
-  - Redis URL & cache keys
-  - Visualization update interval & alert thresholds
-- Environment variables in a `.env` file (load via `python-dotenv` or Docker Compose):
-  ```dotenv
-  # NOAA/USDA
-  NOAA_TOKEN=your_noaa_token
-  USDA_API_KEY=your_usda_key
-
-  # Kafka
-  KAFKA_BOOTSTRAP_SERVERS=localhost:9092
-  KAFKA_GROUP_ID=agri_processor
-  KAFKA_WEATHER_TOPIC=noaa_weather
-  KAFKA_YIELD_TOPIC=usda_yield
-  KAFKA_OUTPUT_TOPIC=enriched_yield
-
-  # InfluxDB
-  INFLUXDB_URL=http://localhost:8086
-  INFLUXDB_TOKEN=your_influx_token
-  INFLUXDB_ORG=your_org
-  INFLUXDB_BUCKET=your_bucket
-
-  # Redis
-  REDIS_URL=redis://localhost:6379/0
-  REDIS_WEATHER_KEY=weather_data
-  REDIS_YIELD_KEY=yield_data
-  REDIS_ALERTS_KEY=alerts
-
-  # Twilio
-  TWILIO_ACCOUNT_SID=ACxxx
-  TWILIO_AUTH_TOKEN=xxxx
-  TWILIO_FROM_NUMBER=+1234567890
-  TWILIO_TO_NUMBER=+1987654321
-
-  # PostgreSQL DSN
-  POSTGRES_DSN=postgresql://user:pass@db:5432/alerts
+---
+## 4. Ingestors
+- **Location**: `src/data_ingestion/live_ingestor.py`
+- Fetches NDVI, weather, and yield data from APIs
+- Writes raw points to InfluxDB **and** publishes to Kafka topics
+- Configuration via `config/pipeline_config.yml` or environment variables
+- Run locally:
+  ```bash
+  python src/data_ingestion/live_ingestor.py
   ```
 
 ---
-
-## 3. Kafka & InfluxDB Setup
-
-### Docker Compose
-1. Start services:
-   ```bash
-   docker-compose up -d zookeeper kafka influxdb redis
-   ```
-2. Create Kafka topics:
-   ```bash
-   docker exec kafka \
-     kafka-topics --create --topic noaa_weather \
-     --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
-   docker exec kafka \
-     kafka-topics --create --topic usda_yield \
-     --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
-   docker exec kafka \
-     kafka-topics --create --topic enriched_yield \
-     --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
-   ```
-
-### InfluxDB Initialization
-- Uses Docker volume `influxdb-init` for `/docker-entrypoint-initdb.d`
-- Initial setup via `INFLUXDB_INIT_*` env vars in Compose.
-- Access UI at http://localhost:8086
+## 5. Stream Processing
+- **Service**: `stream-processor` (script: `src/processing/stream_processor.py`)
+- Consumes `weather` & `yield` topics
+- Computes rolling averages, detects events (drought/flood)
+- Outputs enriched yield to `enriched_yield`, writes to InfluxDB
+- Emits processing metrics to `stream_metrics`
+- Start via Docker:
+  ```bash
+  docker-compose up -d stream-processor
+  ```
 
 ---
-
-## 4. Dashboard Usage
-
-1. Install Python requirements:
-   ```bash
-   pip install dash dash-leaflet plotly pandas redis python-dotenv
-   ```
-2. Run:
-   ```bash
-   python src/visualization/live_dashboard.py
-   ```
-3. Open browser at http://localhost:8050
-
-The dashboard:
-- Displays a Leaflet map centered on Missouri
-- Shows live-updating precipitation & yield charts
-- Lists current alerts in a panel
+## 6. InfluxDB & Redis
+- **InfluxDB v2** stores time-series metrics and sensor data
+  - Initialized via Docker Compose (`INFLUXDB_INIT_*` variables)
+  - UI: http://localhost:8086
+- **Redis** caches query results and alert messages
+  - Default: `redis://localhost:6379/0`
+  - CLI: `redis-cli`
 
 ---
-
-## 5. Alert Handling Process
-
-1. **Heartbeat Recording**: Each ingestion or processor emits `record_heartbeat(stream_name)`.
-2. **Periodic Check**: Call `check_streams()` (e.g., every minute) to detect downtime.
-3. **Alert Trigger**: On threshold breach, `_alert()` logs to PostgreSQL and sends SMS via Twilio.
-4. **Deduplication**: Active alerts are suppressed until `ack(stream_name)` is called.
-5. **Acknowledgment**: Manual or automated resolution calls `ack()` to mark incidents acknowledged.
+## 7. Dashboard Usage
+- **Service**: `dash-app` (script: `src/visualization/live_dashboard.py`)
+- Launch:
+  ```bash
+  docker-compose up -d dash-app
+  ```
+- View at http://localhost:8050
+- Features:
+  1. Missouri Leaflet map: NDVI heatmap, weather & yield markers
+  2. Time-series charts: precipitation & yield (last 24h)
+  3. Real-time alert panel (latest via Redis)
 
 ---
+## 8. Alerting & Monitoring
+- **Component**: `StreamMonitor` in `src/src/monitoring/alert_manager.py`
+  - Consumes `stream_metrics`, applies thresholds (`lag`, `error_rate`)
+  - Sends SMS via Twilio on anomalies
+  - Logs to PostgreSQL table `monitor_events`
+  - Tracks acknowledgments to suppress duplicates
+- Run locally:
+  ```bash
+  python src/src/monitoring/alert_manager.py
+  ```
+  Or:
+  ```bash
+  docker-compose up -d stream-monitor
+  ```
 
-## 6. Glossary
-- **Ingestion**: Asynchronous fetching of API data (NOAA, USDA) into Kafka & InfluxDB.
-- **Stream Processor**: Kafka consumer that enriches yield with weather metrics, computes rolling averages, and detects events.
-- **Enrichment**: Combining yield records with recent temperature & precipitation statistics.
-- **Rolling Window**: Time-based deque storing recent measurements for computing averages.
-- **Avro**: Serialization format for Kafka messages.
-- **Dash**: Python framework for building interactive web dashboards.
-- **Redis**: In-memory cache for sharing data between producer and dashboard.
-- **Heartbeat**: Timestamp emitted to track a stream’s health.
-- **Threshold**: Maximum allowed downtime before raising an alert.
-- **Alert Manager**: Component that monitors heartbeats, sends notifications, and logs incidents.
-- **Twilio**: SMS API used for sending text alerts.
-- **PostgreSQL**: Relational DB for persisting alert incidents.
+---
+## 9. Operational Tips
+- Check service health: `docker-compose ps`, `docker logs <service>`
+- Inspect Kafka traffic:
+  ```bash
+  kafka-console-consumer --bootstrap-server localhost:9092 --topic noaa_weather --from-beginning
+  ```
+- Tune InfluxDB retention via `InfluxDBWriter.setup_retention(hours)`
+- Adjust Redis TTL for cache freshness vs. load
+- Scale Kafka partitions/consumers for throughput
+- Secure secrets with Docker secrets or Vault for production
