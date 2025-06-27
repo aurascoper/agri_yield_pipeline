@@ -21,7 +21,7 @@ End-to-end system for ingesting, processing, visualizing, and modeling agricultu
 
 ## Clone & Setup
 ```bash
-git clone https://github.com/your_org/agri_yield_pipeline.git
+git clone https://github.com/aurascoper/agri_yield_pipeline.git
 cd agri_yield_pipeline
 ```
 
