@@ -4,6 +4,11 @@ End-to-end agricultural monitoring system: satellite NDVI (Sentinel-2 via Google
 
 **ML Results:** GradientBoosting LOO-CV R² = 0.80, RMSE = 9.9 bu/acre on 14-year Missouri corn dataset (2010–2023). Peak growing-season NDVI is the dominant predictor.
 
+![Model Results](figures/model_results.png)
+![NDVI vs Yield](figures/ndvi_yield_scatter.png)
+![Correlation Analysis](figures/correlation_analysis.png)
+![EDA Overview](figures/eda_overview.png)
+
 ## Table of Contents
 1. [Quickstart: Analysis Notebook](#quickstart-analysis-notebook)
 2. [Prerequisites](#prerequisites)
