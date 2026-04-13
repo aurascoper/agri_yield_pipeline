@@ -1,17 +1,37 @@
 # Agri Yield Pipeline
 
-End-to-end system for ingesting, processing, visualizing, and modeling agricultural yield, NDVI, and weather data in Missouri.
+End-to-end agricultural monitoring system: satellite NDVI (Sentinel-2 via Google Earth Engine), real-time NOAA/USDA ingestion, Kafka streaming, InfluxDB/PostgreSQL storage, and ML yield prediction for Missouri corn production.
+
+**ML Results:** GradientBoosting LOO-CV R² = 0.80, RMSE = 9.9 bu/acre on 14-year Missouri corn dataset (2010–2023). Peak growing-season NDVI is the dominant predictor.
 
 ## Table of Contents
-1. [Prerequisites](#prerequisites)
-2. [Clone & Setup](#clone--setup)
-3. [Environment Configuration](#environment-configuration)
-4. [Docker Services](#docker-services)
-5. [Real-Time Data Ingestion](#real-time-data-ingestion)
-6. [Stream Processing](#stream-processing)
-7. [Dashboard Access](#dashboard-access)
-8. [API Endpoints](#api-endpoints)
-9. [Troubleshooting Tips](#troubleshooting-tips)
+1. [Quickstart: Analysis Notebook](#quickstart-analysis-notebook)
+2. [Prerequisites](#prerequisites)
+3. [Clone & Setup](#clone--setup)
+4. [Environment Configuration](#environment-configuration)
+5. [Docker Services](#docker-services)
+6. [Real-Time Data Ingestion](#real-time-data-ingestion)
+7. [Stream Processing](#stream-processing)
+8. [Dashboard Access](#dashboard-access)
+9. [API Endpoints](#api-endpoints)
+10. [Troubleshooting Tips](#troubleshooting-tips)
+
+## Quickstart: Analysis Notebook
+
+Run the full ML pipeline without any API keys — uses embedded 14-year Missouri corn data:
+
+```bash
+pip install -r requirements.txt
+jupyter notebook notebooks/ndvi_analysis.ipynb
+```
+
+The notebook runs end-to-end:
+- Generates synthetic NDVI + weather series with realistic agronomic signals (2012 drought, 2019 late-planting)
+- Builds feature matrix: ndvi_peak, ndvi_mean_growing, ndvi_july/june, prcp_may_aug, gdd_may_aug, drought_flag, tmax_july_mean
+- Trains Ridge and GradientBoosting models with LOO-CV
+- Outputs correlation heatmap, actual vs predicted scatter, feature importance, and residual plots to `figures/`
+
+To swap in real data: replace `generate_ndvi_series()` / `generate_weather_series()` calls with Google Earth Engine + NOAA API fetchers in `src/`.
 
 ## Prerequisites
 - Git (for cloning the repo)
