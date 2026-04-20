@@ -2,6 +2,8 @@ __pycache__/
 *.pyc
 *.pyo
 .env
+.venv/
+venv/
 .ipynb_checkpoints/
 .DS_Store
 data/yields/*.csv
