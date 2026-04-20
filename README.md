@@ -4,21 +4,52 @@ End-to-end agricultural monitoring system: satellite NDVI (Sentinel-2 via Google
 
 ## ML Results
 
-**Real-data baseline** (MODIS MOD13Q1 NDVI + NOAA GHCND + USDA NASS, 6 NW Missouri counties, 2001–2023, 111 county-years × 15 features):
+**Statewide real-data baseline** — MODIS MOD13Q1 NDVI (250 m, 16-day composite) +
+NOAA GHCND daily weather + USDA NASS county yields, **97 Missouri counties**,
+2001–2023, **1,658 county-years × 106 features** (including one-hot county effects):
 
 | Model            | CV R² | CV RMSE (bu/acre) | Train R² |
 |------------------|-------|-------------------|----------|
-| Ridge            | 0.558 | 21.7              | 0.757    |
-| GradientBoosting | **0.785** | **15.2**      | 0.996    |
+| Ridge            | 0.208 | 30.5              | 0.757    |
+| GradientBoosting | **0.681** | **19.4**      | 0.826    |
 
+Top GBR features (statewide): `ndvi_july` (0.28), `drought_flag` (0.15),
+`prcp_may_aug` (0.13), `tmax_july_mean` (0.13), `ndvi_mean_growing` (0.11).
+Going from 6 homogeneous NW counties (R²=0.785) to all 97 yield-bearing
+counties (R²=0.681) reflects real agroclimatic heterogeneity: the Bootheel
+rice paddies, Ozark pasture, and Glacial-till corn belt don't share a single
+NDVI→yield slope.
+
+### Corn yield map — avg 2015-2023
+![Corn yield by county](figures/real/choropleth_corn_yield.png)
+
+Interactive (plotly): [`figures/real/choropleth_corn_yield.html`](figures/real/choropleth_corn_yield.html).
+
+### NDVI vs corn yield (full state)
+![Peak NDVI vs corn yield — 97 counties](figures/real/ndvi_yield_scatter_full.png)
+
+Pearson r = 0.52 between peak summer NDVI and corn yield across 1,658 observations.
+
+### Multi-crop coverage
+![MO crop yield rank by county, 2018-2023](figures/real/multi_crop_coverage.png)
+![Annual mean yield by crop](figures/real/yield_trend_by_crop.png)
+
+USDA NASS coverage for 8 commodities (CORN, SOYBEANS, WHEAT, SORGHUM, COTTON,
+RICE, OATS, HAY) written to `data/real/usda_allcrops_county_missouri_2001_2023.parquet`
+(7,890 rows, 116 counties).
+
+### GBR feature importance + per-county residuals
+![GBR feature importance](figures/real/feature_importance_full.png)
+![Residuals by county](figures/real/residuals_by_county.png)
+
+### Earlier models
 ![GBR — Actual vs Predicted by County](figures/real/model_gbr_county.png)
 ![Ridge — Actual vs Predicted by County](figures/real/model_ridge_county.png)
-![Correlation (real data)](figures/real/correlation_real.png)
 
 **Synthetic-data reference** (14-year single-county dataset, LOO-CV): GBR R² = 0.80, RMSE = 9.9 bu/acre.
 
 ![Synthetic Model Results](figures/model_results.png)
-![NDVI vs Yield](figures/ndvi_yield_scatter.png)
+![NDVI vs Yield (synthetic)](figures/ndvi_yield_scatter.png)
 
 ## Table of Contents
 1. [Quickstart: Analysis Notebook](#quickstart-analysis-notebook)
@@ -53,11 +84,33 @@ With `NOAA_API_TOKEN` and `USDA_API_KEY` set in `.env`:
 
 ```bash
 python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python scripts/fetch_real_data.py   # caches parquets in data/real/
-.venv/bin/python scripts/train_real.py        # writes figures/real/
+# 6-county quick start (~5 min):
+.venv/bin/python scripts/fetch_real_data.py
+# Statewide MO — NDVI for every county with USDA yields (~6 h, one-time):
+.venv/bin/python scripts/fetch_all_counties.py
+# All 8 MO commodities (CORN, SOYBEANS, WHEAT, SORGHUM, COTTON, RICE, OATS, HAY):
+.venv/bin/python scripts/fetch_usda_all_crops.py
+# Train + figures:
+.venv/bin/python scripts/train_real.py
+.venv/bin/python scripts/generate_full_figures.py
+.venv/bin/python scripts/generate_choropleth_static.py
 ```
 
-Fetches MODIS MOD13Q1 NDVI (ORNL DAAC REST, no auth), NOAA GHCND daily weather, and USDA NASS county corn yields. Reruns hit the parquet cache.
+MODIS NDVI comes from the ORNL DAAC REST endpoint (no auth). NOAA GHCND daily
+weather and USDA NASS yields require the respective tokens. Reruns hit the
+parquet cache; each NDVI parquet is 250 m × 250 m × 16-day, 2001–2023.
+
+### Baseline dashboard (no Docker, no Postgres)
+
+```bash
+.venv/bin/python dash_baseline.py
+# → http://127.0.0.1:8050
+```
+
+Reads directly from the cached parquets — county map with year-range slider,
+per-crop statewide trend, per-county NDVI time series, per-county yield series.
+The production `dash_app.py` still requires PostgreSQL + InfluxDB (see
+[Docker Services](#docker-services)).
 
 ## Prerequisites
 - Git (for cloning the repo)
