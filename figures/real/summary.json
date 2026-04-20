@@ -1,0 +1,15 @@
+{
+  "n_samples": 1658,
+  "n_counties": 97,
+  "n_features": 106,
+  "gbr_cv_r2": 0.6811442233212279,
+  "gbr_cv_rmse": 19.361032768020728,
+  "gbr_train_r2": 0.8255689716968952,
+  "top_features": {
+    "ndvi_july": 0.2753913804242846,
+    "drought_flag": 0.14880269531463564,
+    "prcp_may_aug": 0.12653264451977922,
+    "tmax_july_mean": 0.1252143492209274,
+    "ndvi_mean_growing": 0.10732384455652906
+  }
+}
