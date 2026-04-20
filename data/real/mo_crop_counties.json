@@ -1,0 +1,1747 @@
+[
+  {
+    "county": "ADAIR",
+    "county_ansi": "001",
+    "lat": 40.1907,
+    "lon": -92.6036,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 46,
+    "soy_rank": 53,
+    "wheat_rank": 38
+  },
+  {
+    "county": "ANDREW",
+    "county_ansi": "003",
+    "lat": 39.9889,
+    "lon": -94.8036,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 27,
+    "soy_rank": 24,
+    "wheat_rank": 24
+  },
+  {
+    "county": "ATCHISON",
+    "county_ansi": "005",
+    "lat": 40.4318,
+    "lon": -95.4376,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 8,
+    "soy_rank": 3,
+    "wheat_rank": 71
+  },
+  {
+    "county": "AUDRAIN",
+    "county_ansi": "007",
+    "lat": 39.2145,
+    "lon": -91.8434,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 43,
+    "soy_rank": 35,
+    "wheat_rank": 2
+  },
+  {
+    "county": "BARRY",
+    "county_ansi": "009",
+    "lat": 36.6994,
+    "lon": -93.8343,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 90,
+    "soy_rank": 100,
+    "wheat_rank": 64
+  },
+  {
+    "county": "BARTON",
+    "county_ansi": "011",
+    "lat": 37.5008,
+    "lon": -94.3441,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 50,
+    "soy_rank": 91,
+    "wheat_rank": 22
+  },
+  {
+    "county": "BATES",
+    "county_ansi": "013",
+    "lat": 38.2572,
+    "lon": -94.3392,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 45,
+    "soy_rank": 81,
+    "wheat_rank": 59
+  },
+  {
+    "county": "BENTON",
+    "county_ansi": "015",
+    "lat": 38.301,
+    "lon": -93.2879,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 83,
+    "soy_rank": 79,
+    "wheat_rank": 41
+  },
+  {
+    "county": "BOLLINGER",
+    "county_ansi": "017",
+    "lat": 37.3184,
+    "lon": -90.0246,
+    "crops": [
+      "CORN",
+      "HAY",
+      "RICE",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 29,
+    "soy_rank": 78,
+    "wheat_rank": 55
+  },
+  {
+    "county": "BOONE",
+    "county_ansi": "019",
+    "lat": 38.9899,
+    "lon": -92.3102,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 49,
+    "soy_rank": 69,
+    "wheat_rank": 34
+  },
+  {
+    "county": "BUCHANAN",
+    "county_ansi": "021",
+    "lat": 39.6604,
+    "lon": -94.8082,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 15,
+    "soy_rank": 10,
+    "wheat_rank": 68
+  },
+  {
+    "county": "BUTLER",
+    "county_ansi": "023",
+    "lat": 36.7152,
+    "lon": -90.4031,
+    "crops": [
+      "CORN",
+      "HAY",
+      "RICE",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 14,
+    "soy_rank": 17,
+    "wheat_rank": 80
+  },
+  {
+    "county": "CALDWELL",
+    "county_ansi": "025",
+    "lat": 39.659,
+    "lon": -93.9792,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 60,
+    "soy_rank": 72,
+    "wheat_rank": 51
+  },
+  {
+    "county": "CALLAWAY",
+    "county_ansi": "027",
+    "lat": 38.8355,
+    "lon": -91.9234,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 42,
+    "soy_rank": 59,
+    "wheat_rank": 27
+  },
+  {
+    "county": "CAMDEN",
+    "county_ansi": "029",
+    "lat": 38.0265,
+    "lon": -92.7653,
+    "crops": [
+      "HAY"
+    ],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "CAPE GIRARDEAU",
+    "county_ansi": "031",
+    "lat": 37.3841,
+    "lon": -89.6857,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 23,
+    "soy_rank": 27,
+    "wheat_rank": 45
+  },
+  {
+    "county": "CARROLL",
+    "county_ansi": "033",
+    "lat": 39.4274,
+    "lon": -93.5002,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 17,
+    "soy_rank": 20,
+    "wheat_rank": 54
+  },
+  {
+    "county": "CARTER",
+    "county_ansi": "035",
+    "lat": 36.9449,
+    "lon": -90.9457,
+    "crops": [
+      "HAY"
+    ],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "CASS",
+    "county_ansi": "037",
+    "lat": 38.6465,
+    "lon": -94.3545,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 67,
+    "soy_rank": 82,
+    "wheat_rank": 60
+  },
+  {
+    "county": "CEDAR",
+    "county_ansi": "039",
+    "lat": 37.7337,
+    "lon": -93.85,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 76,
+    "soy_rank": 101,
+    "wheat_rank": 82
+  },
+  {
+    "county": "CHARITON",
+    "county_ansi": "041",
+    "lat": 39.518,
+    "lon": -92.9616,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 28,
+    "soy_rank": 48,
+    "wheat_rank": 56
+  },
+  {
+    "county": "CHRISTIAN",
+    "county_ansi": "043",
+    "lat": 36.9697,
+    "lon": -93.1876,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 101,
+    "soy_rank": 89,
+    "wheat_rank": 6
+  },
+  {
+    "county": "CLARK",
+    "county_ansi": "045",
+    "lat": 40.4073,
+    "lon": -91.7295,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 53,
+    "soy_rank": 43,
+    "wheat_rank": 26
+  },
+  {
+    "county": "CLAY",
+    "county_ansi": "047",
+    "lat": 39.3156,
+    "lon": -94.4215,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 19,
+    "soy_rank": 28,
+    "wheat_rank": 77
+  },
+  {
+    "county": "CLINTON",
+    "county_ansi": "049",
+    "lat": 39.6087,
+    "lon": -94.3958,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 24,
+    "soy_rank": 11,
+    "wheat_rank": 69
+  },
+  {
+    "county": "COLE",
+    "county_ansi": "051",
+    "lat": 38.5032,
+    "lon": -92.28,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 34,
+    "soy_rank": 30,
+    "wheat_rank": 89
+  },
+  {
+    "county": "COOPER",
+    "county_ansi": "053",
+    "lat": 38.8471,
+    "lon": -92.8101,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 58,
+    "soy_rank": 51,
+    "wheat_rank": 11
+  },
+  {
+    "county": "CRAWFORD",
+    "county_ansi": "055",
+    "lat": 37.9666,
+    "lon": -91.3139,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 79,
+    "soy_rank": 50,
+    "wheat_rank": 101
+  },
+  {
+    "county": "DADE",
+    "county_ansi": "057",
+    "lat": 37.4323,
+    "lon": -93.8549,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 86,
+    "soy_rank": 93,
+    "wheat_rank": 42
+  },
+  {
+    "county": "DALLAS",
+    "county_ansi": "059",
+    "lat": 37.6836,
+    "lon": -93.0338,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 97,
+    "soy_rank": 84,
+    "wheat_rank": 52
+  },
+  {
+    "county": "DAVIESS",
+    "county_ansi": "061",
+    "lat": 39.9628,
+    "lon": -93.9701,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 55,
+    "soy_rank": 68,
+    "wheat_rank": 73
+  },
+  {
+    "county": "DEKALB",
+    "county_ansi": "063",
+    "lat": 39.8947,
+    "lon": -94.4072,
+    "crops": [],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "DENT",
+    "county_ansi": "065",
+    "lat": 37.6031,
+    "lon": -91.4897,
+    "crops": [
+      "CORN",
+      "HAY"
+    ],
+    "corn_rank": 104,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "DOUGLAS",
+    "county_ansi": "067",
+    "lat": 36.9465,
+    "lon": -92.5159,
+    "crops": [
+      "HAY"
+    ],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "DUNKLIN",
+    "county_ansi": "069",
+    "lat": 36.153,
+    "lon": -90.0623,
+    "crops": [
+      "CORN",
+      "COTTON",
+      "HAY",
+      "RICE",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 5,
+    "soy_rank": 57,
+    "wheat_rank": 31
+  },
+  {
+    "county": "FRANKLIN",
+    "county_ansi": "071",
+    "lat": 38.413,
+    "lon": -91.0728,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 33,
+    "soy_rank": 39,
+    "wheat_rank": 86
+  },
+  {
+    "county": "GASCONADE",
+    "county_ansi": "073",
+    "lat": 38.4412,
+    "lon": -91.5058,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 75,
+    "soy_rank": 66,
+    "wheat_rank": 84
+  },
+  {
+    "county": "GENTRY",
+    "county_ansi": "075",
+    "lat": 40.2081,
+    "lon": -94.4053,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 54,
+    "soy_rank": 60,
+    "wheat_rank": 47
+  },
+  {
+    "county": "GREENE",
+    "county_ansi": "077",
+    "lat": 37.2582,
+    "lon": -93.3406,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 88,
+    "soy_rank": 92,
+    "wheat_rank": 87
+  },
+  {
+    "county": "GRUNDY",
+    "county_ansi": "079",
+    "lat": 40.1125,
+    "lon": -93.5651,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 61,
+    "soy_rank": 55,
+    "wheat_rank": 65
+  },
+  {
+    "county": "HARRISON",
+    "county_ansi": "081",
+    "lat": 40.3456,
+    "lon": -93.9926,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 69,
+    "soy_rank": 62,
+    "wheat_rank": 85
+  },
+  {
+    "county": "HENRY",
+    "county_ansi": "083",
+    "lat": 38.3865,
+    "lon": -93.7926,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 99,
+    "soy_rank": 90,
+    "wheat_rank": 58
+  },
+  {
+    "county": "HICKORY",
+    "county_ansi": "085",
+    "lat": 37.9369,
+    "lon": -93.323,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 82,
+    "soy_rank": 97,
+    "wheat_rank": 99
+  },
+  {
+    "county": "HOLT",
+    "county_ansi": "087",
+    "lat": 40.0957,
+    "lon": -95.2191,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 6,
+    "soy_rank": 6,
+    "wheat_rank": 70
+  },
+  {
+    "county": "HOWARD",
+    "county_ansi": "089",
+    "lat": 39.1434,
+    "lon": -92.6959,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 37,
+    "soy_rank": 41,
+    "wheat_rank": 49
+  },
+  {
+    "county": "HOWELL",
+    "county_ansi": "091",
+    "lat": 36.7744,
+    "lon": -91.8874,
+    "crops": [
+      "CORN",
+      "HAY",
+      "WHEAT"
+    ],
+    "corn_rank": 96,
+    "soy_rank": null,
+    "wheat_rank": 96
+  },
+  {
+    "county": "IRON",
+    "county_ansi": "093",
+    "lat": 37.626,
+    "lon": -90.6996,
+    "crops": [
+      "HAY"
+    ],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "JACKSON",
+    "county_ansi": "095",
+    "lat": 39.0054,
+    "lon": -94.3432,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 25,
+    "soy_rank": 52,
+    "wheat_rank": 15
+  },
+  {
+    "county": "JASPER",
+    "county_ansi": "097",
+    "lat": 37.2052,
+    "lon": -94.3373,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 93,
+    "soy_rank": 95,
+    "wheat_rank": 29
+  },
+  {
+    "county": "JEFFERSON",
+    "county_ansi": "099",
+    "lat": 38.2576,
+    "lon": -90.5437,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 81,
+    "soy_rank": 61,
+    "wheat_rank": 78
+  },
+  {
+    "county": "JOHNSON",
+    "county_ansi": "101",
+    "lat": 38.7415,
+    "lon": -93.8119,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 57,
+    "soy_rank": 74,
+    "wheat_rank": 35
+  },
+  {
+    "county": "KNOX",
+    "county_ansi": "103",
+    "lat": 40.1369,
+    "lon": -92.1468,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 30,
+    "soy_rank": 44,
+    "wheat_rank": 20
+  },
+  {
+    "county": "LACLEDE",
+    "county_ansi": "105",
+    "lat": 37.6597,
+    "lon": -92.5948,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 68,
+    "soy_rank": 83,
+    "wheat_rank": 94
+  },
+  {
+    "county": "LAFAYETTE",
+    "county_ansi": "107",
+    "lat": 39.0687,
+    "lon": -93.8026,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 11,
+    "soy_rank": 5,
+    "wheat_rank": 8
+  },
+  {
+    "county": "LAWRENCE",
+    "county_ansi": "109",
+    "lat": 37.1066,
+    "lon": -93.8306,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 84,
+    "soy_rank": 96,
+    "wheat_rank": 75
+  },
+  {
+    "county": "LEWIS",
+    "county_ansi": "111",
+    "lat": 40.0846,
+    "lon": -91.7288,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 51,
+    "soy_rank": 47,
+    "wheat_rank": 23
+  },
+  {
+    "county": "LINCOLN",
+    "county_ansi": "113",
+    "lat": 39.0623,
+    "lon": -90.9629,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 56,
+    "soy_rank": 46,
+    "wheat_rank": 32
+  },
+  {
+    "county": "LINN",
+    "county_ansi": "115",
+    "lat": 39.8644,
+    "lon": -93.108,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 62,
+    "soy_rank": 71,
+    "wheat_rank": 67
+  },
+  {
+    "county": "LIVINGSTON",
+    "county_ansi": "117",
+    "lat": 39.7786,
+    "lon": -93.5482,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 38,
+    "soy_rank": 56,
+    "wheat_rank": 53
+  },
+  {
+    "county": "MACON",
+    "county_ansi": "121",
+    "lat": 39.8298,
+    "lon": -92.5643,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 52,
+    "soy_rank": 75,
+    "wheat_rank": 39
+  },
+  {
+    "county": "MADISON",
+    "county_ansi": "123",
+    "lat": 37.4745,
+    "lon": -90.3434,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS"
+    ],
+    "corn_rank": 100,
+    "soy_rank": 42,
+    "wheat_rank": null
+  },
+  {
+    "county": "MARIES",
+    "county_ansi": "125",
+    "lat": 38.1626,
+    "lon": -91.9236,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 95,
+    "soy_rank": 88,
+    "wheat_rank": 91
+  },
+  {
+    "county": "MARION",
+    "county_ansi": "127",
+    "lat": 39.8075,
+    "lon": -91.6354,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 22,
+    "soy_rank": 16,
+    "wheat_rank": 7
+  },
+  {
+    "county": "MCDONALD",
+    "county_ansi": "119",
+    "lat": 36.628,
+    "lon": -94.3437,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 74,
+    "soy_rank": 1,
+    "wheat_rank": 102
+  },
+  {
+    "county": "MERCER",
+    "county_ansi": "129",
+    "lat": 40.4214,
+    "lon": -93.5676,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 59,
+    "soy_rank": 76,
+    "wheat_rank": 76
+  },
+  {
+    "county": "MILLER",
+    "county_ansi": "131",
+    "lat": 38.2167,
+    "lon": -92.4299,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 70,
+    "soy_rank": 31,
+    "wheat_rank": 95
+  },
+  {
+    "county": "MISSISSIPPI",
+    "county_ansi": "133",
+    "lat": 36.8263,
+    "lon": -89.2959,
+    "crops": [
+      "CORN",
+      "COTTON",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 2,
+    "soy_rank": 8,
+    "wheat_rank": 1
+  },
+  {
+    "county": "MONITEAU",
+    "county_ansi": "135",
+    "lat": 38.633,
+    "lon": -92.5836,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 80,
+    "soy_rank": 73,
+    "wheat_rank": 36
+  },
+  {
+    "county": "MONROE",
+    "county_ansi": "137",
+    "lat": 39.4983,
+    "lon": -92.0065,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 63,
+    "soy_rank": 40,
+    "wheat_rank": 14
+  },
+  {
+    "county": "MONTGOMERY",
+    "county_ansi": "139",
+    "lat": 38.9352,
+    "lon": -91.4654,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 77,
+    "soy_rank": 49,
+    "wheat_rank": 5
+  },
+  {
+    "county": "MORGAN",
+    "county_ansi": "141",
+    "lat": 38.4208,
+    "lon": -92.8748,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 94,
+    "soy_rank": 70,
+    "wheat_rank": 25
+  },
+  {
+    "county": "NEW MADRID",
+    "county_ansi": "143",
+    "lat": 36.5943,
+    "lon": -89.6559,
+    "crops": [
+      "CORN",
+      "COTTON",
+      "HAY",
+      "RICE",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 1,
+    "soy_rank": 13,
+    "wheat_rank": 9
+  },
+  {
+    "county": "NEWTON",
+    "county_ansi": "145",
+    "lat": 36.9084,
+    "lon": -94.335,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 73,
+    "soy_rank": 94,
+    "wheat_rank": 40
+  },
+  {
+    "county": "NODAWAY",
+    "county_ansi": "147",
+    "lat": 40.3611,
+    "lon": -94.8831,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 36,
+    "soy_rank": 21,
+    "wheat_rank": 62
+  },
+  {
+    "county": "OREGON",
+    "county_ansi": "149",
+    "lat": 36.6853,
+    "lon": -91.4018,
+    "crops": [
+      "HAY"
+    ],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "OSAGE",
+    "county_ansi": "151",
+    "lat": 38.4643,
+    "lon": -91.8595,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 32,
+    "soy_rank": 23,
+    "wheat_rank": 92
+  },
+  {
+    "county": "OZARK",
+    "county_ansi": "153",
+    "lat": 36.6496,
+    "lon": -92.4585,
+    "crops": [
+      "HAY"
+    ],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "PEMISCOT",
+    "county_ansi": "155",
+    "lat": 36.2099,
+    "lon": -89.7859,
+    "crops": [
+      "CORN",
+      "COTTON",
+      "HAY",
+      "RICE",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 9,
+    "soy_rank": 29,
+    "wheat_rank": 10
+  },
+  {
+    "county": "PERRY",
+    "county_ansi": "157",
+    "lat": 37.7111,
+    "lon": -89.8021,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 26,
+    "soy_rank": 19,
+    "wheat_rank": 30
+  },
+  {
+    "county": "PETTIS",
+    "county_ansi": "159",
+    "lat": 38.7274,
+    "lon": -93.2852,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 71,
+    "soy_rank": 63,
+    "wheat_rank": 28
+  },
+  {
+    "county": "PHELPS",
+    "county_ansi": "161",
+    "lat": 37.8663,
+    "lon": -91.7903,
+    "crops": [
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": null,
+    "soy_rank": 36,
+    "wheat_rank": 98
+  },
+  {
+    "county": "PIKE",
+    "county_ansi": "163",
+    "lat": 39.34,
+    "lon": -91.1716,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 44,
+    "soy_rank": 36,
+    "wheat_rank": 21
+  },
+  {
+    "county": "PLATTE",
+    "county_ansi": "165",
+    "lat": 39.3787,
+    "lon": -94.7615,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 18,
+    "soy_rank": 14,
+    "wheat_rank": 90
+  },
+  {
+    "county": "POLK",
+    "county_ansi": "167",
+    "lat": 37.6168,
+    "lon": -93.4008,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 89,
+    "soy_rank": 87,
+    "wheat_rank": 79
+  },
+  {
+    "county": "PULASKI",
+    "county_ansi": "169",
+    "lat": 37.8248,
+    "lon": -92.207,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS"
+    ],
+    "corn_rank": 105,
+    "soy_rank": 86,
+    "wheat_rank": null
+  },
+  {
+    "county": "PUTNAM",
+    "county_ansi": "171",
+    "lat": 40.4786,
+    "lon": -93.0145,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 66,
+    "soy_rank": 64,
+    "wheat_rank": 74
+  },
+  {
+    "county": "RALLS",
+    "county_ansi": "173",
+    "lat": 39.5535,
+    "lon": -91.5248,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 47,
+    "soy_rank": 34,
+    "wheat_rank": 13
+  },
+  {
+    "county": "RANDOLPH",
+    "county_ansi": "175",
+    "lat": 39.4392,
+    "lon": -92.493,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 39,
+    "soy_rank": 58,
+    "wheat_rank": 17
+  },
+  {
+    "county": "RAY",
+    "county_ansi": "177",
+    "lat": 39.3084,
+    "lon": -93.9957,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 16,
+    "soy_rank": 33,
+    "wheat_rank": 72
+  },
+  {
+    "county": "REYNOLDS",
+    "county_ansi": "179",
+    "lat": 37.3665,
+    "lon": -90.9723,
+    "crops": [
+      "HAY"
+    ],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "RIPLEY",
+    "county_ansi": "181",
+    "lat": 36.6502,
+    "lon": -90.8748,
+    "crops": [
+      "CORN",
+      "HAY",
+      "RICE",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 64,
+    "soy_rank": 85,
+    "wheat_rank": 93
+  },
+  {
+    "county": "SALINE",
+    "county_ansi": "195",
+    "lat": 39.1358,
+    "lon": -93.2042,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 10,
+    "soy_rank": 4,
+    "wheat_rank": 61
+  },
+  {
+    "county": "SCHUYLER",
+    "county_ansi": "197",
+    "lat": 40.4694,
+    "lon": -92.519,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 85,
+    "soy_rank": 77,
+    "wheat_rank": 88
+  },
+  {
+    "county": "SCOTLAND",
+    "county_ansi": "199",
+    "lat": 40.4477,
+    "lon": -92.1428,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 31,
+    "soy_rank": 32,
+    "wheat_rank": 18
+  },
+  {
+    "county": "SCOTT",
+    "county_ansi": "201",
+    "lat": 37.0478,
+    "lon": -89.5681,
+    "crops": [
+      "CORN",
+      "COTTON",
+      "HAY",
+      "RICE",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 4,
+    "soy_rank": 18,
+    "wheat_rank": 16
+  },
+  {
+    "county": "SHANNON",
+    "county_ansi": "203",
+    "lat": 37.1525,
+    "lon": -91.3913,
+    "crops": [
+      "HAY"
+    ],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "SHELBY",
+    "county_ansi": "205",
+    "lat": 39.7975,
+    "lon": -92.0887,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 48,
+    "soy_rank": 45,
+    "wheat_rank": 19
+  },
+  {
+    "county": "ST. CHARLES",
+    "county_ansi": "183",
+    "lat": 38.7811,
+    "lon": -90.6749,
+    "crops": [],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "ST. CLAIR",
+    "county_ansi": "185",
+    "lat": 38.0422,
+    "lon": -93.7766,
+    "crops": [],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "ST. FRANCOIS",
+    "county_ansi": "187",
+    "lat": 37.8107,
+    "lon": -90.4739,
+    "crops": [],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "ST. LOUIS",
+    "county_ansi": "189",
+    "lat": 38.6407,
+    "lon": -90.4461,
+    "crops": [],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "ST. LOUIS CITY",
+    "county_ansi": "510",
+    "lat": 38.6357,
+    "lon": -90.2446,
+    "crops": [],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "STE. GENEVIEVE",
+    "county_ansi": "186",
+    "lat": 37.8858,
+    "lon": -90.1615,
+    "crops": [],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "STODDARD",
+    "county_ansi": "207",
+    "lat": 36.8516,
+    "lon": -89.9475,
+    "crops": [
+      "CORN",
+      "COTTON",
+      "HAY",
+      "RICE",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 7,
+    "soy_rank": 9,
+    "wheat_rank": 3
+  },
+  {
+    "county": "STONE",
+    "county_ansi": "209",
+    "lat": 36.7458,
+    "lon": -93.4578,
+    "crops": [
+      "CORN",
+      "HAY"
+    ],
+    "corn_rank": 103,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "SULLIVAN",
+    "county_ansi": "211",
+    "lat": 40.2096,
+    "lon": -93.1098,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 78,
+    "soy_rank": 80,
+    "wheat_rank": 81
+  },
+  {
+    "county": "TANEY",
+    "county_ansi": "213",
+    "lat": 36.6498,
+    "lon": -93.0428,
+    "crops": [
+      "HAY",
+      "WHEAT"
+    ],
+    "corn_rank": null,
+    "soy_rank": null,
+    "wheat_rank": 63
+  },
+  {
+    "county": "TEXAS",
+    "county_ansi": "215",
+    "lat": 37.3143,
+    "lon": -91.9645,
+    "crops": [
+      "CORN",
+      "HAY"
+    ],
+    "corn_rank": 87,
+    "soy_rank": null,
+    "wheat_rank": null
+  },
+  {
+    "county": "VERNON",
+    "county_ansi": "217",
+    "lat": 37.8502,
+    "lon": -94.3416,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 91,
+    "soy_rank": 102,
+    "wheat_rank": 50
+  },
+  {
+    "county": "WARREN",
+    "county_ansi": "219",
+    "lat": 38.7619,
+    "lon": -91.1593,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SORGHUM",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 35,
+    "soy_rank": 26,
+    "wheat_rank": 43
+  },
+  {
+    "county": "WASHINGTON",
+    "county_ansi": "221",
+    "lat": 37.9426,
+    "lon": -90.897,
+    "crops": [
+      "HAY",
+      "SOYBEANS"
+    ],
+    "corn_rank": null,
+    "soy_rank": 22,
+    "wheat_rank": null
+  },
+  {
+    "county": "WAYNE",
+    "county_ansi": "223",
+    "lat": 37.1111,
+    "lon": -90.4539,
+    "crops": [
+      "CORN",
+      "HAY",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 98,
+    "soy_rank": 99,
+    "wheat_rank": 100
+  },
+  {
+    "county": "WEBSTER",
+    "county_ansi": "225",
+    "lat": 37.2808,
+    "lon": -92.8761,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 92,
+    "soy_rank": 54,
+    "wheat_rank": 97
+  },
+  {
+    "county": "WORTH",
+    "county_ansi": "227",
+    "lat": 40.4805,
+    "lon": -94.4192,
+    "crops": [
+      "CORN",
+      "HAY",
+      "OATS",
+      "SOYBEANS",
+      "WHEAT"
+    ],
+    "corn_rank": 40,
+    "soy_rank": 38,
+    "wheat_rank": 44
+  },
+  {
+    "county": "WRIGHT",
+    "county_ansi": "229",
+    "lat": 37.2676,
+    "lon": -92.48,
+    "crops": [
+      "CORN",
+      "HAY",
+      "WHEAT"
+    ],
+    "corn_rank": 12,
+    "soy_rank": null,
+    "wheat_rank": 57
+  }
+]
