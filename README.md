@@ -2,12 +2,23 @@
 
 End-to-end agricultural monitoring system: satellite NDVI (Sentinel-2 via Google Earth Engine), real-time NOAA/USDA ingestion, Kafka streaming, InfluxDB/PostgreSQL storage, and ML yield prediction for Missouri corn production.
 
-**ML Results:** GradientBoosting LOO-CV R² = 0.80, RMSE = 9.9 bu/acre on 14-year Missouri corn dataset (2010–2023). Peak growing-season NDVI is the dominant predictor.
+## ML Results
 
-![Model Results](figures/model_results.png)
+**Real-data baseline** (MODIS MOD13Q1 NDVI + NOAA GHCND + USDA NASS, 6 NW Missouri counties, 2001–2023, 111 county-years × 15 features):
+
+| Model            | CV R² | CV RMSE (bu/acre) | Train R² |
+|------------------|-------|-------------------|----------|
+| Ridge            | 0.558 | 21.7              | 0.757    |
+| GradientBoosting | **0.785** | **15.2**      | 0.996    |
+
+![GBR — Actual vs Predicted by County](figures/real/model_gbr_county.png)
+![Ridge — Actual vs Predicted by County](figures/real/model_ridge_county.png)
+![Correlation (real data)](figures/real/correlation_real.png)
+
+**Synthetic-data reference** (14-year single-county dataset, LOO-CV): GBR R² = 0.80, RMSE = 9.9 bu/acre.
+
+![Synthetic Model Results](figures/model_results.png)
 ![NDVI vs Yield](figures/ndvi_yield_scatter.png)
-![Correlation Analysis](figures/correlation_analysis.png)
-![EDA Overview](figures/eda_overview.png)
 
 ## Table of Contents
 1. [Quickstart: Analysis Notebook](#quickstart-analysis-notebook)
@@ -36,7 +47,17 @@ The notebook runs end-to-end:
 - Trains Ridge and GradientBoosting models with LOO-CV
 - Outputs correlation heatmap, actual vs predicted scatter, feature importance, and residual plots to `figures/`
 
-To swap in real data: replace `generate_ndvi_series()` / `generate_weather_series()` calls with Google Earth Engine + NOAA API fetchers in `src/`.
+### Real-data baseline
+
+With `NOAA_API_TOKEN` and `USDA_API_KEY` set in `.env`:
+
+```bash
+python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python scripts/fetch_real_data.py   # caches parquets in data/real/
+.venv/bin/python scripts/train_real.py        # writes figures/real/
+```
+
+Fetches MODIS MOD13Q1 NDVI (ORNL DAAC REST, no auth), NOAA GHCND daily weather, and USDA NASS county corn yields. Reruns hit the parquet cache.
 
 ## Prerequisites
 - Git (for cloning the repo)
