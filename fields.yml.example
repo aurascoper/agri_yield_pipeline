@@ -1,0 +1,31 @@
+# Fields to monitor via Sentinel-2 NDVI.
+# Copy to fields.yml and edit. Each field gets a square bbox of
+# (2 * buffer_m) on a side, centered on lat/lon.
+#
+# Run: .venv/bin/python scripts/export_fields_ndvi.py
+# Cache: data/fields/<name>/ndvi_<YYYY-MM-DD>.tif
+# Series: data/fields/<name>/ndvi_series.parquet
+
+# Earth Engine auth is read from .env:
+#   EE_SERVICE_ACCOUNT=<name>@<project>.iam.gserviceaccount.com
+#   EE_SA_KEY_FILE=/Users/aurascoper/agri_yield_pipeline/ee-service-account.json
+# (or fall back to `earthengine authenticate` user OAuth)
+
+start_date:    "2024-04-01"
+end_date:      "2024-10-31"
+cloud_max_pct: 30                        # drop Sentinel-2 scenes above this SCL-cloud %
+sar_orbit:     "ASCENDING"               # ASCENDING has better US Midwest coverage post-S1B failure (2022)
+
+fields:
+  - name: boone_cafnr_field_1
+    lat: 38.9055
+    lon: -92.2687
+    buffer_m: 500                        # 1 km × 1 km tile
+  - name: nodaway_seed_trial
+    lat: 40.3610
+    lon: -94.8810
+    buffer_m: 400
+  - name: atchison_river_bottom
+    lat: 40.4342
+    lon: -95.3769
+    buffer_m: 600

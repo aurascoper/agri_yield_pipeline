@@ -196,6 +196,51 @@ MODIS NDVI comes from the ORNL DAAC REST endpoint (no auth). NOAA GHCND daily
 weather and USDA NASS yields require the respective tokens. Reruns hit the
 parquet cache; each NDVI parquet is 250 m × 250 m × 16-day, 2001–2023.
 
+### Per-field monitoring (Sentinel-2 NDVI + Sentinel-1 SAR)
+
+For a small, known set of AOIs (3–20 fields, ~ha-scale), the right
+pattern is **export once, cache locally** — nothing in the loop has to
+reach back to Earth Engine once the TIFFs are on disk. Covers the
+agronomist use case: per-field NDVI anomalies for stress flags, VV
+backscatter as a soil-moisture *proxy*, and a quick acreage estimate
+from the NDVI mask.
+
+**One-time GCP setup** (free tier is fine):
+
+1. Create / pick a GCP project; enable the **Earth Engine API**.
+2. [Register the project](https://code.earthengine.google.com/register)
+   for Earth Engine non-commercial use.
+3. IAM → **Create service account** → grant role `Earth Engine Resource Viewer`.
+4. Create a JSON key for the SA and drop it at
+   `/Users/aurascoper/agri_yield_pipeline/ee-service-account.json`
+   (`.gitignore`d).
+5. Add to `.env`:
+   ```dotenv
+   GCP_PROJECT=agri-yield-pipeline
+   EE_SERVICE_ACCOUNT=<name>@<project>.iam.gserviceaccount.com
+   EE_SA_KEY_FILE=/Users/aurascoper/agri_yield_pipeline/ee-service-account.json
+   ```
+   If `EE_SERVICE_ACCOUNT` is unset, `src/ee_auth.init_ee()` falls back
+   to user OAuth (`earthengine authenticate`).
+
+**Fields quickstart:**
+
+```bash
+cp fields.yml.example fields.yml   # then edit lat/lon/buffer for each AOI
+.venv/bin/python scripts/export_fields_ndvi.py   # Sentinel-2 NDVI @ 10 m
+.venv/bin/python scripts/export_fields_sar.py    # Sentinel-1 VV dB @ 10 m
+.venv/bin/python dash_baseline.py                # → Fields tab
+```
+
+Per field, you get:
+- `data/fields/<name>/ndvi_<YYYY-MM-DD>.tif` + `ndvi_series.parquet`
+- `data/fields/<name>/sar_<YYYY-MM-DD>.tif`  + `sar_series.parquet`
+
+The Fields tab shows NDVI/VV tile previews, the DOY z-score against the
+field's own prior-years baseline (flags stress when NDVI z < −1 or VV
+anomaly > 2 dB dry), and a rough vegetated-hectares estimate from
+NDVI > 0.3. Rerun the exporters weekly; they only pull new scenes.
+
 ### Baseline dashboard (no Docker, no Postgres)
 
 ```bash

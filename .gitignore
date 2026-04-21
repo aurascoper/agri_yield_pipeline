@@ -8,3 +8,7 @@ venv/
 .DS_Store
 data/yields/*.csv
 data/yields/*.parquet
+ee-service-account*.json
+fields.yml
+data/fields/
+.claude/
