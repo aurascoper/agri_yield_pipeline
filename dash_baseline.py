@@ -411,11 +411,21 @@ if FIELDS:
             fig_s.update_layout(title=f"{name} — Sentinel-1 VV backscatter",
                                 yaxis_title="VV (dB)", margin=dict(l=40, r=20, t=50, b=40))
 
-        # Latest TIF previews
-        ndvi_tif = latest_tif(name, "ndvi")
-        sar_tif = latest_tif(name, "sar")
-        ndvi_src = tif_as_png_b64(ndvi_tif, cmap="RdYlGn", vmin=0, vmax=1) if ndvi_tif else ""
-        sar_src  = tif_as_png_b64(sar_tif,  cmap="viridis") if sar_tif else ""
+        # Latest tile previews: prefer committed PNGs (Render demo),
+        # fall back to rendering from TIF (local GEE cache).
+        fdir = FIELDS_DIR / name
+        ndvi_png = fdir / "ndvi_preview.png"
+        sar_png = fdir / "sar_preview.png"
+        if ndvi_png.exists():
+            ndvi_src = png_as_b64(ndvi_png) or ""
+        else:
+            ndvi_tif = latest_tif(name, "ndvi")
+            ndvi_src = tif_as_png_b64(ndvi_tif, cmap="RdYlGn", vmin=0, vmax=1) if ndvi_tif else ""
+        if sar_png.exists():
+            sar_src = png_as_b64(sar_png) or ""
+        else:
+            sar_tif = latest_tif(name, "sar")
+            sar_src = tif_as_png_b64(sar_tif, cmap="viridis") if sar_tif else ""
 
         # Metrics card
         fcfg = FIELDS_BY_NAME.get(name, {})

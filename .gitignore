@@ -9,6 +9,7 @@ venv/
 data/yields/*.csv
 data/yields/*.parquet
 ee-service-account*.json
-fields.yml
-data/fields/
+# Ship fields.yml + series parquets so the Render demo has live Fields data.
+# GeoTIFFs stay local — too big + too tenant-specific to commit.
+data/fields/**/*.tif
 .claude/
