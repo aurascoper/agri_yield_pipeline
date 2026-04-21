@@ -34,7 +34,7 @@ REPO = Path(__file__).resolve().parent
 DATA = REPO / "data" / "real"
 FIELDS_DIR = REPO / "data" / "fields"
 FIELDS_CFG = REPO / "fields.yml"
-ENGINE = "fastparquet"
+ENGINE = "pyarrow"
 
 CROP_COLORS = {
     "CORN": "#e6a515", "SOYBEANS": "#4a7c2a", "WHEAT": "#c58c3f",
