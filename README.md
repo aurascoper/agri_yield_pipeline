@@ -48,6 +48,17 @@ NOAA GHCND daily weather + USDA NASS county yields, **97 Missouri counties**,
 | Ridge            | 0.208 | 30.5              | 0.757    |
 | GradientBoosting | **0.681** | **19.4**      | 0.826    |
 
+**Models.** *Ridge* is L2-penalized linear regression (`sklearn.linear_model.Ridge`);
+adding `α‖β‖²` to the loss stabilizes coefficients when features are correlated —
+`ndvi_june / ndvi_july / ndvi_mean_growing` all move together, and the 97 county
+dummies are near-collinear with the intercept. It's the baseline sanity check.
+*GBR* is the Gradient Boosting Regressor (`sklearn.ensemble.GradientBoostingRegressor`,
+300 trees × depth 3, lr 0.05, subsample 0.8) — an ensemble that fits each new tree
+to the residuals of the prior ensemble. It wins by ~3× here (R² 0.681 vs 0.208)
+because it captures the non-linear NDVI→yield saturation, the drought × NDVI
+interaction, and per-county intercepts — all of which a linear model either
+can't represent or has its coefficients shrunk away.
+
 Top GBR features (statewide): `ndvi_july` (0.28), `drought_flag` (0.15),
 `prcp_may_aug` (0.13), `tmax_july_mean` (0.13), `ndvi_mean_growing` (0.11).
 Going from 6 homogeneous NW counties (R²=0.785) to all 97 yield-bearing
