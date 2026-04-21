@@ -88,6 +88,35 @@ RICE, OATS, HAY) written to `data/real/usda_allcrops_county_missouri_2001_2023.p
 ![GBR feature importance](figures/real/feature_importance_full.png)
 ![Residuals by county](figures/real/residuals_by_county.png)
 
+**Reading the residuals chart.** Each horizontal bar is the mean of
+`actual − predicted` corn yield for one county across all years.
+**Green (positive)** → GBR *under-predicts* (actual is higher than modeled).
+**Red (negative)** → GBR *over-predicts* (actual is lower). Bar length is the
+bias magnitude in bu/acre. Across the 97 counties: 16 are within ±2 bu/acre,
+44 within ±5, and only 7 exceed |10|; the statewide mean residual is
+−1.3 bu/acre, so there is no global offset.
+
+The geographic pattern is the real story:
+
+| Region                       | Bias direction             | Representative counties                                           |
+|------------------------------|----------------------------|-------------------------------------------------------------------|
+| Missouri River bottom (loess)| green / under-predicted    | Buchanan +8.5, Platte +7.3, Lafayette +7.2, Chariton +7.6, Ray +7.6 |
+| Bootheel alluvial plain      | green / under-predicted    | Scott +7.7, New Madrid +7.6                                       |
+| Ozark plateau                | red / over-predicted       | Christian −11, Dallas −10, Texas −8.8, Wayne −8.3                 |
+| Single-year outliers (n=1)   | large red tails            | Dent −33, Madison −30, Pulaski −21                                |
+
+GBR is **helpful everywhere** — it still beats Ridge ~3× on every subset —
+but it has been shrunk toward the statewide mean for the tail regions. The
+Missouri River bottom genuinely out-yields what NDVI + weather alone predict
+(richer soils, irrigation); the Ozarks genuinely under-yield (corn is
+marginal acreage). The negative `mean ↔ std` correlation (−0.22) says
+biased counties also have higher variance, another sign that distinct
+agro-regions are being blended into a single fit. Two fixes worth exploring:
+(1) per-region GBR (river bottom / Ozark / Bootheel / N-Missouri), or
+(2) additional features — soil class, elevation, irrigated-acre fraction —
+so the model can separate *low NDVI because Ozark pasture* from *low NDVI
+because drought stress*. The current 97 county-dummies are a crude substitute.
+
 ### Earlier models
 ![GBR — Actual vs Predicted by County](figures/real/model_gbr_county.png)
 ![Ridge — Actual vs Predicted by County](figures/real/model_ridge_county.png)
