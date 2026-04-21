@@ -1,0 +1,10 @@
+# Minimal deps for dash_baseline.py on Render / any cloud runner.
+# Excludes Kafka/InfluxDB/Postgres/GEE/GDAL — dashboard reads parquets only.
+dash>=2.16
+plotly>=5.19
+pandas>=2.1
+numpy>=1.26
+pyarrow>=15.0
+matplotlib>=3.8
+pyyaml>=6.0
+gunicorn>=21.2
