@@ -37,6 +37,51 @@ End-to-end agricultural monitoring system: satellite NDVI (Sentinel-2 via Google
   116 counties) feeds both the ML baseline and the companion `career-ops`
   MO-geo job scorer — same parquet, two consumers.
 
+## Product strategy
+
+This repo is **two products, one parquet cache** — not one product.
+
+| Layer                 | Role                         | Data source                                    | Cadence                          |
+|-----------------------|------------------------------|------------------------------------------------|----------------------------------|
+| **L1 — Historical**   | training / ground truth      | USDA NASS yields + NOAA GHCND + Daymet + MODIS MOD13Q1 NDVI, 2001–2023 | yearly refresh (NASS lag ~12 mo) |
+| **L2 — Live fields**  | inference / per-customer ops | Sentinel-2 NDVI + Sentinel-1 SAR via GEE        | weekly per field                 |
+
+L1 is the defensible corpus — 23 years of county-level truth that takes
+time to assemble. L2 is the real-time anomaly stream scored against L1's
+expected trajectory. The story no single-layer competitor can tell:
+
+> *"Field X is 1.6σ below expected NDVI trajectory for DOY 195 given
+> Boone County's 2001–2023 history."*
+
+**Why Google Earth Engine is the substrate for L2:**
+
+1. **Geographic portability** — the same `export_fields_ndvi.py` runs
+   Iowa, São Paulo, or Punjab by editing `fields.yml`. No per-region
+   API integrations, no per-country license negotiation.
+2. **Multi-sensor at one seam** — S2 (optical), S1 (radar/moisture),
+   Landsat 8/9 TIRS (thermal/ET), MODIS LST, SMAP (soil moisture),
+   CHIRPS (rainfall) — all indexable by the same `ee.Geometry + date
+   range`. Adding thermal-stress pings later is ~40 LoC.
+3. **Cheap for sparse queries** — noncommercial is free; commercial
+   per-compute-hour pricing rounds to pennies for "20 fields × weekly
+   1 km² exports." Cost only matters at whole-country monitoring scale,
+   which is the *opposite* of this use case.
+
+**Where GEE is the wrong tool.** Parametric ag-insurance triggers or
+irrigation valve control need <1 h latency; S2 post-acquisition lag is
+6–24 h and S1 is 2–3 days. That's a Planet Labs (daily 3 m) problem,
+not a GEE problem — don't bolt sub-hour latency onto this pipeline.
+
+**Tenant silo options:**
+
+- **Per-tenant silo** — one `fields.yml` + one `data/fields/<tenant>/`
+  tree per customer. Clean data boundaries, straightforward billing.
+  What this repo scales to naturally.
+- **Global silo + `tenant_id` column** — one fields table keyed by
+  tenant, one geotiff prefix per field globally. Unlocks cross-tenant
+  ML: train one yield model on 10,000 fields across crops/regions
+  instead of 20 fields per tenant. Higher-ceiling ML play.
+
 ## ML Results
 
 **Statewide real-data baseline** — MODIS MOD13Q1 NDVI (250 m, 16-day composite) +
@@ -240,6 +285,38 @@ The Fields tab shows NDVI/VV tile previews, the DOY z-score against the
 field's own prior-years baseline (flags stress when NDVI z < −1 or VV
 anomaly > 2 dB dry), and a rough vegetated-hectares estimate from
 NDVI > 0.3. Rerun the exporters weekly; they only pull new scenes.
+
+### Stress alerts — Layer 1 grounds Layer 2
+
+`scripts/field_stress_alerts.py` scores each field's recent Sentinel-2
+NDVI against its nearest MO county's 2001–2023 MOD13Q1 baseline (same
+DOY ±7 days across 23 years). Severity: `info` < `warn` (|z|≥1.5) <
+`stress` (|z|≥2.0). Pipes to JSON for Slack/email/dashboards:
+
+```bash
+.venv/bin/python scripts/field_stress_alerts.py --lookback 21
+```
+
+Example ping:
+
+```json
+{
+  "field": "boone_cafnr_field_1",
+  "date": "2024-10-22",
+  "ndvi": 0.525,
+  "county": "Boone",
+  "county_doy_mu": 0.605,
+  "z": -1.62,
+  "severity": "warn",
+  "message": "boone_cafnr_field_1: NDVI 0.53 on 2024-10-22 is 1.6σ below the 2001–2023 Boone County mean of 0.60 for DOY 296."
+}
+```
+
+Cross-sensor caveat: field NDVI is Sentinel-2 @ 10 m, county baseline
+is MODIS MOD13Q1 @ 250 m. The z-score normalizes scale, but the
+baseline is biased. Upgrade path: once a field accumulates ≥3 years of
+S2 history, swap to that field's own DOY baseline (see
+`dash_baseline.field_baseline_z`).
 
 ### Baseline dashboard (no Docker, no Postgres)
 
