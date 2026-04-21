@@ -74,7 +74,7 @@ app.layout = html.Div(
                 dcc.RangeSlider(
                     id="year-range",
                     min=YEARS[0], max=YEARS[-1], value=[2015, YEARS[-1]],
-                    marks={y: str(y) for y in YEARS[::4]}, step=1,
+                    marks={str(y): str(y) for y in YEARS[::4]}, step=1,
                 ),
                 dcc.Graph(id="map"),
             ]),
