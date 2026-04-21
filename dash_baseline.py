@@ -87,6 +87,13 @@ def latest_tif(name: str, kind: str) -> Path | None:
     return tifs[-1] if tifs else None
 
 
+def png_as_b64(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    import base64
+    return "data:image/png;base64," + base64.b64encode(path.read_bytes()).decode()
+
+
 def tif_as_png_b64(tif_path: Path, cmap: str, vmin: float | None = None, vmax: float | None = None) -> str:
     import rioxarray  # lazy import to keep cold start fast
     da = rioxarray.open_rasterio(tif_path, masked=True).squeeze()
@@ -156,6 +163,7 @@ FIELD_NAMES = [f["name"] for f in FIELDS]
 # ---------------------------------------------------------------------------
 
 app = dash.Dash(__name__, title="MO Agri — Baseline + Fields")
+server = app.server  # gunicorn entrypoint for Render / Heroku
 
 STATEWIDE_TAB = html.Div(style={"padding": "18px"}, children=[
     html.P(
@@ -201,6 +209,17 @@ STATEWIDE_TAB = html.Div(style={"padding": "18px"}, children=[
             dcc.Graph(id="county-yield"),
         ]),
     ]),
+
+    html.Hr(),
+    html.H3("Per-county Daymet × yield / NDVI correlations"),
+    html.P("Pearson r between 23 years of growing-season weather and corn yield, "
+           "one dot per county. Shows geographic heterogeneity the statewide "
+           "regression hides: July heat hurts yield in 84/85 counties, May-Aug "
+           "rain helps in 81/85, canopy heat-stress tracks in 84/85."),
+    html.Img(
+        src=png_as_b64(REPO / "figures" / "real" / "daymet_correlation_maps.png") or "",
+        style={"width": "100%", "maxWidth": "1400px", "display": "block"},
+    ),
 ])
 
 FIELDS_TAB = html.Div(style={"padding": "18px"}, children=[

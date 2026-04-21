@@ -8,6 +8,7 @@ uvicorn>=0.27
 dash>=2.16
 dash-leaflet>=1.0
 plotly>=5.19
+gunicorn>=21.2
 redis>=5.0
 psycopg2-binary>=2.9
 twilio>=8.10

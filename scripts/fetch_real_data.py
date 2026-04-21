@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Replace the notebook's synthetic generators with real NDVI + weather + yield data.
+Six-county real NDVI + weather + yield fetcher — the fast-path smoke test.
 
 Pulls monthly mean NDVI from Sentinel-2 L2A via Google Earth Engine,
 NOAA GHCND daily weather, and USDA NASS county/state corn yields.
