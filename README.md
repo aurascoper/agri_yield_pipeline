@@ -2,6 +2,41 @@
 
 End-to-end agricultural monitoring system: satellite NDVI (Sentinel-2 via Google Earth Engine), real-time NOAA/USDA ingestion, Kafka streaming, InfluxDB/PostgreSQL storage, and ML yield prediction for Missouri corn production.
 
+## Takeaways
+
+**Data (2001–2023, 97 MO counties, 1,658 county-years):**
+
+- **NDVI → yield signal is real but heterogeneous.** Pearson r = 0.52 between
+  peak summer NDVI and corn yield statewide; GBR CV R² = 0.681 vs 0.785 for the
+  6 homogeneous NW-county subset. A single state-wide regression
+  under-predicts on the glacial-till corn belt and over-predicts on Ozark
+  pasture / Bootheel rice paddies.
+- **July is the hinge month.** `ndvi_july` is the single most important
+  feature (0.28), followed by `drought_flag` (0.15), `prcp_may_aug` (0.13),
+  and `tmax_july_mean` (0.13). Pollination-window stress dominates annual
+  yield variance.
+- **Known drought years show up cleanly** in the statewide trend lines for
+  2012 and 2022 across corn / soy / sorghum — sanity check that MODIS +
+  GHCND + NASS are aligned.
+- **GBR beats Ridge by ~3×** on R² (0.681 vs 0.208). The 97 county one-hot
+  features are too coarse for a linear model to recover per-region intercepts.
+- **Top corn counties** in the 2015–2023 average cluster along the Missouri
+  River bottom (Atchison, Holt, Nodaway, Andrew, Buchanan) — consistent with
+  published USDA rankings.
+
+**Pipeline:**
+
+- Baseline runs end-to-end from cached parquets with no Kafka / Postgres /
+  InfluxDB. `dash_baseline.py` is the proof: `python dash_baseline.py`
+  → `http://127.0.0.1:8050`.
+- Kaleido + remote-geojson hangs in headless Chromium; the matplotlib
+  centroid-bubble fallback (`scripts/generate_choropleth_static.py`) is
+  reliable and renders in < 1 s.
+- The 8-commodity USDA pull
+  (`data/real/usda_allcrops_county_missouri_2001_2023.parquet`, 7,890 rows,
+  116 counties) feeds both the ML baseline and the companion `career-ops`
+  MO-geo job scorer — same parquet, two consumers.
+
 ## ML Results
 
 **Statewide real-data baseline** — MODIS MOD13Q1 NDVI (250 m, 16-day composite) +
