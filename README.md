@@ -40,13 +40,31 @@ End-to-end agricultural monitoring system: satellite NDVI (Sentinel-2 via Google
 ## ML Results
 
 **Statewide real-data baseline** — MODIS MOD13Q1 NDVI (250 m, 16-day composite) +
-NOAA GHCND daily weather + USDA NASS county yields, **97 Missouri counties**,
-2001–2023, **1,658 county-years × 106 features** (including one-hot county effects):
+daily weather + USDA NASS county yields, **97 Missouri counties**, 2001–2023,
+**1,658 county-years**.
 
-| Model            | CV R² | CV RMSE (bu/acre) | Train R² |
-|------------------|-------|-------------------|----------|
-| Ridge            | 0.208 | 30.5              | 0.757    |
-| GradientBoosting | **0.681** | **19.4**      | 0.826    |
+| Variant                                         | Weather source                  | Features | CV R² | CV RMSE (bu/ac) |
+|-------------------------------------------------|---------------------------------|:-------:|:-----:|:---------------:|
+| A. Ridge (baseline)                             | NOAA GHCND, KC MCI (1 station)  | 106     | 0.208 | 30.5            |
+| B. GBR + KC single station                      | NOAA GHCND, KC MCI (1 station)  | 106     | 0.681 | 19.4            |
+| C. GBR + Daymet per county                      | Daymet 1-km per centroid        | 106     | 0.610 | 21.4            |
+| **D. GBR + Daymet per county + year FE**        | Daymet 1-km + year dummies      | 129     | **0.713** | **18.4**    |
+
+**Why the naïve per-county swap (C) *hurt* R² and the fix (D) helps.**
+The KC-only feature set has 0% within-year variance — every county's
+2012 row carried the same `drought_flag`/`tmax_july_mean`, so GBR was
+implicitly learning a year fixed effect through the weather features.
+Swapping in Daymet splits weather variance ~50/50 between spatial and
+temporal (so 2012 is a moderate drought in the Ozarks, a severe drought
+along the Missouri River), which dissolves the year-as-macro-signal and
+the model loses its implicit year effect. Adding explicit year dummies
+(variant D) restores the year effect *and* lets GBR use real local
+weather deviations on top — best of both worlds, +3 points of R² over
+the KC baseline.
+
+Counties with the biggest residual improvement under Daymet are exactly
+the ones whose climate differs most from KC: Madison (bias −30 → −15),
+Wright (+13 → +7), Dent (−33 → −28).
 
 **Models.** *Ridge* is L2-penalized linear regression (`sklearn.linear_model.Ridge`);
 adding `α‖β‖²` to the loss stabilizes coefficients when features are correlated —
@@ -165,8 +183,11 @@ python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python scripts/fetch_all_counties.py
 # All 8 MO commodities (CORN, SOYBEANS, WHEAT, SORGHUM, COTTON, RICE, OATS, HAY):
 .venv/bin/python scripts/fetch_usda_all_crops.py
-# Train + figures:
+# Per-county Daymet 1-km daily weather (~4 min, 115 counties):
+.venv/bin/python scripts/fetch_daymet_per_county.py
+# Train + figures (includes the three-way KC vs Daymet vs Daymet+YearFE comparison):
 .venv/bin/python scripts/train_real.py
+.venv/bin/python scripts/train_real_daymet.py
 .venv/bin/python scripts/generate_full_figures.py
 .venv/bin/python scripts/generate_choropleth_static.py
 ```
