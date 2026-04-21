@@ -147,6 +147,16 @@ USDA NASS coverage for 8 commodities (CORN, SOYBEANS, WHEAT, SORGHUM, COTTON,
 RICE, OATS, HAY) written to `data/real/usda_allcrops_county_missouri_2001_2023.parquet`
 (7,890 rows, 116 counties).
 
+### Per-county Daymet × yield / NDVI correlations
+![Daymet correlation maps](figures/real/daymet_correlation_maps.png)
+
+23 years of growing-season weather vs yield / canopy, one dot per county
+(85 counties with ≥10 paired years). **July heat hurts corn yield in 84/85
+counties** (mean r=−0.63), **May-Aug rain helps in 81/85** (mean r=+0.33),
+and **canopy heat-stress tracks in 84/85** (mean r=−0.61). The
+near-universal sign confirms the features aren't cosmetic — they're the
+real weather-response signal the statewide GBR is exploiting.
+
 ### GBR feature importance + per-county residuals
 ![GBR feature importance](figures/real/feature_importance_full.png)
 ![Residuals by county](figures/real/residuals_by_county.png)
@@ -184,37 +194,16 @@ because drought stress*. The current 97 county-dummies are a crude substitute.
 ![GBR — Actual vs Predicted by County](figures/real/model_gbr_county.png)
 ![Ridge — Actual vs Predicted by County](figures/real/model_ridge_county.png)
 
-**Synthetic-data reference** (14-year single-county dataset, LOO-CV): GBR R² = 0.80, RMSE = 9.9 bu/acre.
-
-![Synthetic Model Results](figures/model_results.png)
-![NDVI vs Yield (synthetic)](figures/ndvi_yield_scatter.png)
-
 ## Table of Contents
-1. [Quickstart: Analysis Notebook](#quickstart-analysis-notebook)
-2. [Prerequisites](#prerequisites)
-3. [Clone & Setup](#clone--setup)
-4. [Environment Configuration](#environment-configuration)
-5. [Docker Services](#docker-services)
-6. [Real-Time Data Ingestion](#real-time-data-ingestion)
-7. [Stream Processing](#stream-processing)
-8. [Dashboard Access](#dashboard-access)
-9. [API Endpoints](#api-endpoints)
-10. [Troubleshooting Tips](#troubleshooting-tips)
-
-## Quickstart: Analysis Notebook
-
-Run the full ML pipeline without any API keys — uses embedded 14-year Missouri corn data:
-
-```bash
-pip install -r requirements.txt
-jupyter notebook notebooks/ndvi_analysis.ipynb
-```
-
-The notebook runs end-to-end:
-- Generates synthetic NDVI + weather series with realistic agronomic signals (2012 drought, 2019 late-planting)
-- Builds feature matrix: ndvi_peak, ndvi_mean_growing, ndvi_july/june, prcp_may_aug, gdd_may_aug, drought_flag, tmax_july_mean
-- Trains Ridge and GradientBoosting models with LOO-CV
-- Outputs correlation heatmap, actual vs predicted scatter, feature importance, and residual plots to `figures/`
+1. [Prerequisites](#prerequisites)
+2. [Clone & Setup](#clone--setup)
+3. [Environment Configuration](#environment-configuration)
+4. [Docker Services](#docker-services)
+5. [Real-Time Data Ingestion](#real-time-data-ingestion)
+6. [Stream Processing](#stream-processing)
+7. [Dashboard Access](#dashboard-access)
+8. [API Endpoints](#api-endpoints)
+9. [Troubleshooting Tips](#troubleshooting-tips)
 
 ### Real-data baseline
 
@@ -235,6 +224,8 @@ python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python scripts/train_real_daymet.py
 .venv/bin/python scripts/generate_full_figures.py
 .venv/bin/python scripts/generate_choropleth_static.py
+# Per-county Daymet x yield / NDVI correlation choropleth (85 counties):
+.venv/bin/python scripts/generate_daymet_correlation_maps.py
 ```
 
 MODIS NDVI comes from the ORNL DAAC REST endpoint (no auth). NOAA GHCND daily
@@ -326,9 +317,26 @@ S2 history, swap to that field's own DOY baseline (see
 ```
 
 Reads directly from the cached parquets — county map with year-range slider,
-per-crop statewide trend, per-county NDVI time series, per-county yield series.
-The production `dash_app.py` still requires PostgreSQL + InfluxDB (see
-[Docker Services](#docker-services)).
+per-crop statewide trend, per-county NDVI time series, per-county yield series,
+and the per-county Daymet correlation panel. The production `dash_app.py`
+still requires PostgreSQL + InfluxDB (see [Docker Services](#docker-services)).
+
+### Deploy to Render (free tier)
+
+`render.yaml` is already in the repo; the Statewide MO tab is the
+deployable product (the Fields tab needs the local GEE cache, so it
+gracefully shows an "empty" notice when `data/fields/` is absent).
+
+1. Push the repo to GitHub (already done).
+2. https://dashboard.render.com → **New → Blueprint** → point at this repo.
+3. Render auto-detects `render.yaml`, provisions a Python 3.11 web
+   service, runs `gunicorn dash_baseline:server`.
+4. First boot ~3–5 min; subsequent deploys <60 s.
+
+No secrets needed for Statewide-only. To also serve the Fields tab
+live, set `EE_SERVICE_ACCOUNT`, `EE_SA_KEY_FILE_CONTENTS` (base64), and
+`GCP_PROJECT` in Render's env vars and add a build-step that writes
+the key to disk — but that's only worth it for a real tenant.
 
 ## Prerequisites
 - Git (for cloning the repo)
