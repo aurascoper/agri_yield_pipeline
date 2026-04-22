@@ -1,0 +1,64 @@
+name: refresh-counties
+
+# Weekly rolling-window refresh of the per-county NDVI + SAR parquets.
+# Sentinel-2 revisit ~5 days, Sentinel-1 ~12 days post-S1B; a weekly cron
+# keeps data/counties/mo/*.parquet ≤ 7 days stale.
+#
+# Required GitHub secrets:
+#   EE_SERVICE_ACCOUNT   e.g. earthengine-api@agri-yield-pipeline.iam.gserviceaccount.com
+#   EE_SA_KEY_JSON       full JSON contents of the service-account key file
+#                        (paste verbatim into the secret value — NOT a path)
+
+on:
+  schedule:
+    - cron: "0 11 * * 1"     # every Monday 11:00 UTC (~06:00 CST)
+  workflow_dispatch:          # allow manual triggering from the Actions tab
+
+permissions:
+  contents: write             # needed to commit updated parquets back to main
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install earthengine-api pandas pyarrow pyyaml
+
+      - name: Write EE service-account key
+        env:
+          EE_SA_KEY_JSON: ${{ secrets.EE_SA_KEY_JSON }}
+        run: |
+          mkdir -p .secrets
+          printf '%s' "$EE_SA_KEY_JSON" > .secrets/ee-service-account.json
+          echo "EE_SA_KEY_FILE=$GITHUB_WORKSPACE/.secrets/ee-service-account.json" >> $GITHUB_ENV
+          echo "EE_SERVICE_ACCOUNT=${{ secrets.EE_SERVICE_ACCOUNT }}" >> $GITHUB_ENV
+
+      - name: Export county NDVI (rolling 60 days)
+        run: python scripts/export_counties_ndvi.py --days 60
+
+      - name: Export county SAR (rolling 60 days)
+        run: python scripts/export_counties_sar.py --days 60
+
+      - name: Commit updated parquets
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/counties/mo/*.parquet || true
+          if git diff --staged --quiet; then
+            echo "No county parquet changes — nothing to commit."
+          else
+            git commit -m "chore(counties): weekly rolling NDVI + SAR refresh"
+            git push
+          fi

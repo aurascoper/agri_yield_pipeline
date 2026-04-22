@@ -34,6 +34,7 @@ REPO = Path(__file__).resolve().parent
 DATA = REPO / "data" / "real"
 FIELDS_DIR = REPO / "data" / "fields"
 FIELDS_CFG = REPO / "fields.yml"
+COUNTIES_LIVE_DIR = REPO / "data" / "counties" / "mo"
 ENGINE = "pyarrow"
 
 CROP_COLORS = {
@@ -158,6 +159,38 @@ FIELDS = load_fields_config()
 FIELDS_BY_NAME = {f["name"]: f for f in FIELDS}
 FIELD_NAMES = [f["name"] for f in FIELDS]
 
+
+def load_counties_live() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Load per-county rolling-window NDVI + SAR VV parquets.
+
+    Populated by scripts/export_counties_{ndvi,sar}.py, which reduce each
+    Sentinel scene to per-county cropland-masked stats and cache under
+    data/counties/mo/. Missing files → empty frames (tab shows a notice)."""
+    ndvi_path = COUNTIES_LIVE_DIR / "ndvi_series.parquet"
+    sar_path = COUNTIES_LIVE_DIR / "sar_series.parquet"
+    ndvi_df = pd.read_parquet(ndvi_path, engine=ENGINE) if ndvi_path.exists() else pd.DataFrame()
+    sar_df = pd.read_parquet(sar_path, engine=ENGINE) if sar_path.exists() else pd.DataFrame()
+    for df in (ndvi_df, sar_df):
+        if not df.empty:
+            df["date"] = pd.to_datetime(df["date"])
+    return ndvi_df, sar_df
+
+
+COUNTIES_NDVI_LIVE, COUNTIES_SAR_LIVE = load_counties_live()
+COUNTIES_LIVE_NAMES = sorted(set(COUNTIES_NDVI_LIVE.get("county", pd.Series(dtype=str)).dropna().unique())
+                             | set(COUNTIES_SAR_LIVE.get("county", pd.Series(dtype=str)).dropna().unique()))
+
+
+def counties_live_latest_ts() -> str:
+    """Human-readable freshness stamp for the tab header."""
+    dates = []
+    for df in (COUNTIES_NDVI_LIVE, COUNTIES_SAR_LIVE):
+        if not df.empty:
+            dates.append(df["date"].max())
+    if not dates:
+        return "no data"
+    return max(dates).strftime("%Y-%m-%d")
+
 # ---------------------------------------------------------------------------
 # Layout
 # ---------------------------------------------------------------------------
@@ -262,11 +295,51 @@ FIELDS_TAB = html.Div(style={"padding": "18px"}, children=[
     ]),
 ])
 
+COUNTIES_LIVE_TAB = html.Div(style={"padding": "18px"}, children=(
+    [
+        html.Div(style={"padding": "40px", "background": "#fff8e1", "border": "1px solid #f0c040"}, children=[
+            html.H4("No live county data yet"),
+            html.P([
+                "Run the county exporters to populate this tab:"
+            ]),
+            html.Pre(
+                ".venv/bin/python scripts/export_counties_ndvi.py --days 60\n"
+                ".venv/bin/python scripts/export_counties_sar.py  --days 60",
+                style={"background": "#fafafa", "padding": "8px"}
+            ),
+            html.P([
+                "Each exporter reduces every Sentinel-2 (NDVI) / Sentinel-1 (VV dB) "
+                "scene in the window over the 114 MO county polygons, masked to "
+                "USDA CDL row crops (corn / soy / winter wheat / sorghum), and "
+                "appends to ", html.Code("data/counties/mo/*.parquet"), "."
+            ]),
+        ])
+    ] if not COUNTIES_LIVE_NAMES else [
+        html.Div(style={"display": "flex", "alignItems": "center", "gap": "20px"}, children=[
+            html.Label("County", style={"fontWeight": "bold"}),
+            dcc.Dropdown(id="county-live-pick",
+                         options=[{"label": c, "value": c} for c in COUNTIES_LIVE_NAMES],
+                         value=COUNTIES_LIVE_NAMES[0],
+                         clearable=False, style={"width": "320px"}),
+            html.Div(f"latest scene: {counties_live_latest_ts()}", style={"color": "#555"}),
+            html.Div(f"{len(COUNTIES_LIVE_NAMES)} counties · CDL-masked to row crops",
+                     style={"color": "#888", "fontSize": "12px"}),
+        ]),
+        html.Hr(),
+        html.H5("NDVI (Sentinel-2, cropland-masked county mean · p10-p90 band)"),
+        dcc.Graph(id="county-live-ndvi"),
+        html.H5("SAR VV backscatter, dB (Sentinel-1, cropland-masked county mean · p10-p90 band)"),
+        dcc.Graph(id="county-live-sar"),
+    ]
+))
+
 app.layout = html.Div(style={"fontFamily": "system-ui, sans-serif", "margin": "10px"}, children=[
     html.H2("Missouri agricultural monitoring — local dashboard"),
     dcc.Tabs(id="tabs", value="tab-statewide", children=[
         dcc.Tab(label="Statewide MO", value="tab-statewide", children=[STATEWIDE_TAB]),
         dcc.Tab(label=f"Fields ({len(FIELDS)})", value="tab-fields", children=[FIELDS_TAB]),
+        dcc.Tab(label=f"Counties live ({len(COUNTIES_LIVE_NAMES)})",
+                value="tab-counties-live", children=[COUNTIES_LIVE_TAB]),
     ]),
     html.Hr(),
     html.P(
@@ -467,6 +540,60 @@ if FIELDS:
             ),
         ]
         return fig_n, fig_s, ndvi_src, sar_src, metrics
+
+
+# ---------------------------------------------------------------------------
+# Counties-live callbacks
+# ---------------------------------------------------------------------------
+
+def _band_figure(df: pd.DataFrame, mean_col: str, p10_col: str, p90_col: str,
+                 line_color: str, fill_rgba: str, title: str, yaxis_title: str | None,
+                 yaxis_range: tuple[float, float] | None = None) -> go.Figure:
+    if df.empty:
+        return go.Figure().update_layout(title=title + " — no data in window")
+    sub = df.sort_values("date")
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=sub["date"], y=sub[p90_col],
+                             line=dict(width=0), showlegend=False, hoverinfo="skip"))
+    fig.add_trace(go.Scatter(x=sub["date"], y=sub[p10_col],
+                             fill="tonexty", line=dict(width=0),
+                             fillcolor=fill_rgba, name="p10–p90", hoverinfo="skip"))
+    fig.add_trace(go.Scatter(x=sub["date"], y=sub[mean_col],
+                             mode="lines+markers",
+                             line=dict(color=line_color, width=2), name="cropland mean"))
+    layout = dict(title=title, margin=dict(l=40, r=20, t=50, b=40))
+    if yaxis_title:
+        layout["yaxis_title"] = yaxis_title
+    if yaxis_range:
+        layout["yaxis_range"] = list(yaxis_range)
+    fig.update_layout(**layout)
+    return fig
+
+
+if COUNTIES_LIVE_NAMES:
+    @app.callback(
+        Output("county-live-ndvi", "figure"),
+        Output("county-live-sar", "figure"),
+        Input("county-live-pick", "value"),
+    )
+    def update_counties_live(county):
+        ndvi_sub = COUNTIES_NDVI_LIVE[COUNTIES_NDVI_LIVE["county"] == county] \
+            if not COUNTIES_NDVI_LIVE.empty else pd.DataFrame()
+        sar_sub = COUNTIES_SAR_LIVE[COUNTIES_SAR_LIVE["county"] == county] \
+            if not COUNTIES_SAR_LIVE.empty else pd.DataFrame()
+        fig_n = _band_figure(
+            ndvi_sub, "ndvi_mean", "ndvi_p10", "ndvi_p90",
+            line_color="#4a7c2a", fill_rgba="rgba(74,124,42,0.15)",
+            title=f"{county} County — Sentinel-2 NDVI (cropland-masked)",
+            yaxis_title="NDVI", yaxis_range=(0.0, 1.0),
+        )
+        fig_s = _band_figure(
+            sar_sub, "vv_mean_db", "vv_p10", "vv_p90",
+            line_color="#a63d40", fill_rgba="rgba(166,61,64,0.15)",
+            title=f"{county} County — Sentinel-1 VV backscatter (cropland-masked)",
+            yaxis_title="VV (dB)",
+        )
+        return fig_n, fig_s
 
 
 if __name__ == "__main__":
