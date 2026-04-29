@@ -442,4 +442,7 @@ uvicorn api.main:app --reload
 - Use `docker-compose ps` and `docker-compose logs <service>` for diagnostics.  
 - Access InfluxDB UI at http://localhost:8086 (use credentials from `.env`).  
 - Test Redis with `redis-cli -u redis://localhost:6379/0`.  
-- Confirm Google Earth Engine authentication: `earthengine authenticate`.  
+- Confirm Google Earth Engine authentication: `earthengine authenticate`.
+
+## License
+Released under the [MIT License](LICENSE).  
