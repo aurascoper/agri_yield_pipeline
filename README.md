@@ -129,6 +129,15 @@ counties (R²=0.681) reflects real agroclimatic heterogeneity: the Bootheel
 rice paddies, Ozark pasture, and Glacial-till corn belt don't share a single
 NDVI→yield slope.
 
+### Best model — GBR + Daymet + year FE (CV R²=0.713)
+
+The winning variant (D in the table above): per-county Daymet weather plus
+explicit year dummies, **CV R²=0.713, RMSE=18.4 bu/ac** across 1,658
+county-years.
+
+![GBR + Daymet + year FE — Actual vs Predicted by county](figures/real/model_gbr_county_daymet.png)
+![Top features — GBR + Daymet + year FE](figures/real/feature_importance_daymet.png)
+
 ### Corn yield map — avg 2015-2023
 ![Corn yield by county](figures/real/choropleth_corn_yield.png)
 
@@ -138,6 +147,13 @@ Interactive (plotly): [`figures/real/choropleth_corn_yield.html`](figures/real/c
 ![Peak NDVI vs corn yield — 97 counties](figures/real/ndvi_yield_scatter_full.png)
 
 Pearson r = 0.52 between peak summer NDVI and corn yield across 1,658 observations.
+
+### Feature–yield correlation matrix
+![Feature–yield correlations](figures/real/correlation_real.png)
+
+Pairwise Pearson r across the engineered features and corn yield. `ndvi_peak`
+and `ndvi_july` lead the yield column (r≈0.60); the `prcp_may_aug` ↔ `prcp_annual`
+block (r=0.97) is the collinearity the Ridge L2 penalty exists to absorb.
 
 ### Multi-crop coverage
 ![MO crop yield rank by county, 2018-2023](figures/real/multi_crop_coverage.png)
@@ -159,7 +175,8 @@ real weather-response signal the statewide GBR is exploiting.
 
 ### GBR feature importance + per-county residuals
 ![GBR feature importance](figures/real/feature_importance_full.png)
-![Residuals by county](figures/real/residuals_by_county.png)
+![Residuals by county — KC baseline](figures/real/residuals_by_county.png)
+![Residuals by county — Daymet + year FE](figures/real/residuals_by_county_daymet.png)
 
 **Reading the residuals chart.** Each horizontal bar is the mean of
 `actual − predicted` corn yield for one county across all years.
@@ -190,9 +207,14 @@ agro-regions are being blended into a single fit. Two fixes worth exploring:
 so the model can separate *low NDVI because Ozark pasture* from *low NDVI
 because drought stress*. The current 97 county-dummies are a crude substitute.
 
-### Earlier models
-![GBR — Actual vs Predicted by County](figures/real/model_gbr_county.png)
-![Ridge — Actual vs Predicted by County](figures/real/model_ridge_county.png)
+### Earlier models (KC single-station baseline)
+
+The KC-station feature set, superseded by the Daymet + year-FE model above:
+GBR (variant B, R²=0.681) and the Ridge baseline (variant A, R²=0.208) it
+beats ~3×.
+
+![GBR — Actual vs Predicted by County (KC baseline)](figures/real/model_gbr_county.png)
+![Ridge — Actual vs Predicted by County (baseline)](figures/real/model_ridge_county.png)
 
 ## Table of Contents
 1. [Prerequisites](#prerequisites)
@@ -248,13 +270,13 @@ from the NDVI mask.
    for Earth Engine non-commercial use.
 3. IAM → **Create service account** → grant role `Earth Engine Resource Viewer`.
 4. Create a JSON key for the SA and drop it at
-   `/Users/aurascoper/agri_yield_pipeline/ee-service-account.json`
+   `./ee-service-account.json`
    (`.gitignore`d).
 5. Add to `.env`:
    ```dotenv
    GCP_PROJECT=agri-yield-pipeline
    EE_SERVICE_ACCOUNT=<name>@<project>.iam.gserviceaccount.com
-   EE_SA_KEY_FILE=/Users/aurascoper/agri_yield_pipeline/ee-service-account.json
+   EE_SA_KEY_FILE=./ee-service-account.json
    ```
    If `EE_SERVICE_ACCOUNT` is unset, `src/ee_auth.init_ee()` falls back
    to user OAuth (`earthengine authenticate`).
