@@ -2,36 +2,46 @@
   "kc_baseline": {
     "n_samples": 1658,
     "n_features": 106,
-    "cv_r2": 0.6811442233212279,
-    "cv_rmse": 19.361032768020728,
+    "cv_r2": 0.6782332839754613,
+    "cv_rmse": 19.44920859938746,
     "train_r2": 0.8255689716968952
   },
   "daymet_plus_year_fe": {
     "n_samples": 1658,
     "n_features": 129,
-    "cv_r2": 0.7132465722092434,
-    "cv_rmse": 18.360549903300967,
-    "train_r2": 0.8464740381011564,
+    "cv_r2": 0.7090802396940983,
+    "cv_rmse": 18.4934520585725,
+    "train_r2": 0.8467222253542173,
     "top_features": {
-      "ndvi_july": 0.282536110072518,
-      "tmax_july_mean": 0.16780511498859568,
-      "ndvi_mean_growing": 0.10655685466485056,
-      "ndvi_june": 0.07637646968193115,
-      "drought_flag": 0.06622874109119013,
-      "prcp_annual": 0.02791074546175615,
-      "ndvi_peak": 0.021358399366117567,
-      "gdd_may_aug": 0.019499895894283963
+      "ndvi_july": 0.2823648271052955,
+      "tmax_july_mean": 0.16835889627466472,
+      "ndvi_mean_growing": 0.10719111209284143,
+      "ndvi_june": 0.07620885042923357,
+      "drought_flag": 0.0661946317918481,
+      "prcp_annual": 0.02804261310522939,
+      "ndvi_peak": 0.02104287243484493,
+      "gdd_may_aug": 0.020159397176823676
     }
   },
   "daymet_only": {
-    "cv_r2": 0.6104970169553754,
-    "cv_rmse": 21.39866940876008
+    "cv_r2": 0.6111364742684022,
+    "cv_rmse": 21.381096813672897
+  },
+  "leave_one_year_out": {
+    "question": "forecast a new season, known counties (no year dummies)",
+    "cv_r2": 0.5562478497412806,
+    "cv_rmse": 22.840289827632684
+  },
+  "doubly_blocked": {
+    "question": "new county, new season (no year dummies)",
+    "cv_r2": 0.48275292511097045,
+    "cv_rmse": 24.659280283154857
   },
   "delta_best_vs_kc": {
-    "cv_r2": 0.03210234888801544,
-    "cv_rmse": -1.0004828647197606
+    "cv_r2": 0.030846955718636937,
+    "cv_rmse": -0.95575654081496
   },
-  "residuals_within_2_buacre": 18,
-  "residuals_within_5_buacre": 48,
+  "residuals_within_2_buacre": 19,
+  "residuals_within_5_buacre": 46,
   "residuals_above_10_buacre": 10
 }

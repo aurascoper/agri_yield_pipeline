@@ -24,6 +24,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import GroupKFold
 import plotly.express as px
 
 REPO = Path(__file__).resolve().parents[1]
@@ -221,7 +222,8 @@ def fig_model_diagnostics(ndvi: pd.DataFrame, weather: pd.DataFrame, yields: pd.
     mask = y.notna()
     X, y = X.loc[mask], y.loc[mask]
 
-    result = train_model(X, y, model_type="gbr", cv=5)
+    result = train_model(X, y, model_type="gbr",
+                         cv=GroupKFold(n_splits=5), groups=combined.loc[mask, "county"].values)
 
     # feature importance (non-county features only)
     fi = result["feature_importance"]
