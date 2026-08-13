@@ -17,6 +17,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import GroupKFold
 
 REPO = Path(__file__).resolve().parents[1]
 DATA = REPO / "data" / "real"
@@ -165,7 +166,9 @@ def main():
 
     for model_type in ("ridge", "gbr"):
         log.info("Training %s...", model_type.upper())
-        result = train_model(X, y, model_type=model_type, cv=5)
+        county_groups = X.index.str.rsplit("_", n=1).str[0]
+        result = train_model(X, y, model_type=model_type,
+                             cv=GroupKFold(n_splits=5), groups=county_groups)
         log.info("  %s CV R²=%.3f  RMSE=%.1f bu/acre  TrainR²=%.3f",
                  model_type.upper(), result["cv_r2"], result["cv_rmse"], result["train_r2"])
         plot_model_results(result, f"Real county-level | {model_type.upper()}",

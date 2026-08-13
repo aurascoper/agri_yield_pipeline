@@ -11,6 +11,7 @@ import pandas as pd
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import cross_val_score, LeaveOneOut
+from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score, root_mean_squared_error
@@ -128,6 +129,7 @@ def train_model(
     targets: pd.Series,
     model_type: str = 'gbr',
     cv: str = 'loo',
+    groups=None,
 ) -> dict:
     """
     Train a yield prediction model with cross-validation.
@@ -136,7 +138,11 @@ def train_model(
         features: per-year feature matrix (from build_features or external)
         targets: yield in bu/acre, indexed by year
         model_type: 'ridge' or 'gbr' (GradientBoostingRegressor)
-        cv: 'loo' (LeaveOneOut) or int for KFold
+        cv: 'loo' (LeaveOneOut), int for KFold, or any sklearn splitter
+            (e.g. GroupKFold — pass the matching `groups` array).
+            NOTE: int KFold does not shuffle, so held-out sets depend on row
+            order; for blocked evaluation pass an explicit grouped splitter.
+        groups: per-row group labels forwarded to the splitter
 
     Returns dict with:
         model: fitted sklearn Pipeline
@@ -150,15 +156,12 @@ def train_model(
     X = features.loc[idx].copy()
     y = targets.loc[idx].copy()
 
-    X = X.fillna(X.median())
-
     if len(X) < 4:
         raise ValueError(f"Need at least 4 samples; got {len(X)}.")
 
-    # Build pipeline
+    # Build pipeline; median imputation lives inside so it is fit per CV fold
     if model_type == 'ridge':
         estimator = Ridge(alpha=1.0)
-        pipe = Pipeline([('scaler', StandardScaler()), ('model', estimator)])
     else:
         estimator = GradientBoostingRegressor(
             n_estimators=100,
@@ -167,13 +170,22 @@ def train_model(
             subsample=0.8,
             random_state=42,
         )
-        pipe = Pipeline([('scaler', StandardScaler()), ('model', estimator)])
+    pipe = Pipeline([
+        ('impute', SimpleImputer(strategy='median')),
+        ('scaler', StandardScaler()),
+        ('model', estimator),
+    ])
 
     # Cross-validation
     # For LOO: compute R² on the full OOF prediction array (per-fold R² is undefined with 1 sample)
     from sklearn.model_selection import cross_val_predict
-    cv_strategy = LeaveOneOut() if cv == 'loo' else int(cv)
-    y_oof = cross_val_predict(pipe, X, y, cv=cv_strategy)
+    if cv == 'loo':
+        cv_strategy = LeaveOneOut()
+    elif hasattr(cv, 'split'):
+        cv_strategy = cv
+    else:
+        cv_strategy = int(cv)
+    y_oof = cross_val_predict(pipe, X, y, cv=cv_strategy, groups=groups)
     cv_rmse = float(root_mean_squared_error(y, y_oof))
     cv_r2 = float(r2_score(y, y_oof))
 
@@ -219,7 +231,6 @@ def load_model(path: str):
 
 
 def predict(model, features: pd.DataFrame) -> pd.Series:
-    """Run inference on new feature rows."""
-    X = features.fillna(features.median())
-    preds = model.predict(X)
+    """Run inference on new feature rows (pipeline imputes from training medians)."""
+    preds = model.predict(features)
     return pd.Series(preds, index=features.index, name='yield_pred_bu_acre')

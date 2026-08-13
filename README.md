@@ -7,7 +7,7 @@ End-to-end agricultural monitoring system: satellite NDVI (Sentinel-2 via Google
 **Data (2001–2023, 97 MO counties, 1,658 county-years):**
 
 - **NDVI → yield signal is real but heterogeneous.** Pearson r = 0.52 between
-  peak summer NDVI and corn yield statewide; GBR CV R² = 0.681 vs 0.785 for the
+  peak summer NDVI and corn yield statewide; GBR CV R² = 0.678 vs 0.785 for the
   6 homogeneous NW-county subset. A single state-wide regression
   under-predicts on the glacial-till corn belt and over-predicts on Ozark
   pasture / Bootheel rice paddies.
@@ -18,7 +18,7 @@ End-to-end agricultural monitoring system: satellite NDVI (Sentinel-2 via Google
 - **Known drought years show up cleanly** in the statewide trend lines for
   2012 and 2022 across corn / soy / sorghum — sanity check that MODIS +
   GHCND + NASS are aligned.
-- **GBR beats Ridge by ~3×** on R² (0.681 vs 0.208). The 97 county one-hot
+- **GBR beats Ridge by ~3×** on R² (0.678 vs 0.189). The 97 county one-hot
   features are too coarse for a linear model to recover per-region intercepts.
 - **Top corn counties** in the 2015–2023 average cluster along the Missouri
   River bottom (Atchison, Holt, Nodaway, Andrew, Buchanan) — consistent with
@@ -88,12 +88,29 @@ not a GEE problem — don't bolt sub-hour latency onto this pipeline.
 daily weather + USDA NASS county yields, **97 Missouri counties**, 2001–2023,
 **1,658 county-years**.
 
+All model-variant rows use **county-blocked 5-fold CV** (`GroupKFold` on county:
+test counties never appear in training). An earlier version reported nearly
+identical numbers from `cv=5` unshuffled KFold, which blocked counties only by
+accident of county-sorted row order — the blocking is now explicit in code.
+
 | Variant                                         | Weather source                  | Features | CV R² | CV RMSE (bu/ac) |
 |-------------------------------------------------|---------------------------------|:-------:|:-----:|:---------------:|
-| A. Ridge (baseline)                             | NOAA GHCND, KC MCI (1 station)  | 106     | 0.208 | 30.5            |
-| B. GBR + KC single station                      | NOAA GHCND, KC MCI (1 station)  | 106     | 0.681 | 19.4            |
-| C. GBR + Daymet per county                      | Daymet 1-km per centroid        | 106     | 0.610 | 21.4            |
-| **D. GBR + Daymet per county + year FE**        | Daymet 1-km + year dummies      | 129     | **0.713** | **18.4**    |
+| A. Ridge (baseline)                             | NOAA GHCND, KC MCI (1 station)  | 106     | 0.189 | 30.9            |
+| B. GBR + KC single station                      | NOAA GHCND, KC MCI (1 station)  | 106     | 0.678 | 19.4            |
+| C. GBR + Daymet per county                      | Daymet 1-km per centroid        | 106     | 0.611 | 21.4            |
+| **D. GBR + Daymet per county + year FE**        | Daymet 1-km + year dummies      | 129     | **0.709** | **18.5**    |
+
+**What each number answers.** County-blocked CV shares *years* between train
+and test, so variant D's 0.709 answers "gap-fill a held-out county in a
+historical year" — it is **not** a forecast metric. The forward-looking
+numbers for the same GBR + Daymet features (no year dummies — a held-out
+year's dummy is all-zero in training, so year FE can only hurt here):
+
+| Split                                     | Question it answers                       | CV R² | CV RMSE (bu/ac) |
+|-------------------------------------------|-------------------------------------------|:-----:|:---------------:|
+| County-blocked 5-fold (variant D)         | Gap-fill a held-out county, historical yr | 0.709 | 18.5            |
+| Leave-one-year-out                        | Forecast a new season, known counties     | 0.556 | 22.8            |
+| Doubly blocked (unseen county × unseen yr)| New county, new season                    | 0.483 | 24.7            |
 
 **Why the naïve per-county swap (C) *hurt* R² and the fix (D) helps.**
 The KC-only feature set has 0% within-year variance — every county's
@@ -116,8 +133,8 @@ adding `α‖β‖²` to the loss stabilizes coefficients when features are corr
 `ndvi_june / ndvi_july / ndvi_mean_growing` all move together, and the 97 county
 dummies are near-collinear with the intercept. It's the baseline sanity check.
 *GBR* is the Gradient Boosting Regressor (`sklearn.ensemble.GradientBoostingRegressor`,
-300 trees × depth 3, lr 0.05, subsample 0.8) — an ensemble that fits each new tree
-to the residuals of the prior ensemble. It wins by ~3× here (R² 0.681 vs 0.208)
+100 trees × depth 3, lr 0.1, subsample 0.8) — an ensemble that fits each new tree
+to the residuals of the prior ensemble. It wins by ~3× here (R² 0.678 vs 0.189)
 because it captures the non-linear NDVI→yield saturation, the drought × NDVI
 interaction, and per-county intercepts — all of which a linear model either
 can't represent or has its coefficients shrunk away.
@@ -125,14 +142,14 @@ can't represent or has its coefficients shrunk away.
 Top GBR features (statewide): `ndvi_july` (0.28), `drought_flag` (0.15),
 `prcp_may_aug` (0.13), `tmax_july_mean` (0.13), `ndvi_mean_growing` (0.11).
 Going from 6 homogeneous NW counties (R²=0.785) to all 97 yield-bearing
-counties (R²=0.681) reflects real agroclimatic heterogeneity: the Bootheel
+counties (R²=0.678) reflects real agroclimatic heterogeneity: the Bootheel
 rice paddies, Ozark pasture, and Glacial-till corn belt don't share a single
 NDVI→yield slope.
 
-### Best model — GBR + Daymet + year FE (CV R²=0.713)
+### Best model — GBR + Daymet + year FE (CV R²=0.709)
 
 The winning variant (D in the table above): per-county Daymet weather plus
-explicit year dummies, **CV R²=0.713, RMSE=18.4 bu/ac** across 1,658
+explicit year dummies, **CV R²=0.709, RMSE=18.5 bu/ac** (county-blocked CV) across 1,658
 county-years.
 
 ![GBR + Daymet + year FE — Actual vs Predicted by county](figures/real/model_gbr_county_daymet.png)
@@ -210,7 +227,7 @@ because drought stress*. The current 97 county-dummies are a crude substitute.
 ### Earlier models (KC single-station baseline)
 
 The KC-station feature set, superseded by the Daymet + year-FE model above:
-GBR (variant B, R²=0.681) and the Ridge baseline (variant A, R²=0.208) it
+GBR (variant B, R²=0.678) and the Ridge baseline (variant A, R²=0.189) it
 beats ~3×.
 
 ![GBR — Actual vs Predicted by County (KC baseline)](figures/real/model_gbr_county.png)

@@ -24,6 +24,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.impute import SimpleImputer
+from sklearn.metrics import r2_score, root_mean_squared_error
+from sklearn.model_selection import GroupKFold, LeaveOneGroupOut
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 
 REPO = Path(__file__).resolve().parents[1]
 DATA = REPO / "data" / "real"
@@ -104,6 +110,35 @@ def prep(df: pd.DataFrame):
     return X, y, df
 
 
+def doubly_blocked_score(X: pd.DataFrame, y: pd.Series, county: np.ndarray,
+                         year: np.ndarray, n_groups: int = 5) -> dict:
+    """OOF R²/RMSE where every test row's county AND year are absent from training.
+
+    sklearn has no two-axis grouped splitter, so cross the county and year
+    group assignments: each row is tested in exactly one (county-group,
+    year-group) cell, trained on rows sharing neither its county group nor
+    its year group.
+    """
+    c_grp = pd.factorize(county)[0] % n_groups
+    y_grp = pd.factorize(year)[0] % n_groups
+    oof = pd.Series(index=y.index, dtype=float)
+    for cg in range(n_groups):
+        for yg in range(n_groups):
+            te = (c_grp == cg) & (y_grp == yg)
+            tr = (c_grp != cg) & (y_grp != yg)
+            pipe = Pipeline([
+                ("impute", SimpleImputer(strategy="median")),
+                ("scaler", StandardScaler()),
+                ("model", GradientBoostingRegressor(n_estimators=100, max_depth=3,
+                                                    learning_rate=0.1, subsample=0.8,
+                                                    random_state=42)),
+            ])
+            pipe.fit(X[tr], y[tr])
+            oof[te] = pipe.predict(X[te])
+    return {"cv_r2": float(r2_score(y, oof)),
+            "cv_rmse": float(root_mean_squared_error(y, oof))}
+
+
 def render_diagnostics(result, y, df, tag: str):
     # feature importance
     fi = result["feature_importance"]
@@ -155,20 +190,38 @@ def render_diagnostics(result, y, df, tag: str):
 
 
 def main():
+    # All variants use explicit county-grouped CV: test counties never appear
+    # in training. Previously cv=5 (unshuffled KFold) achieved ~the same
+    # blocking only by accident of county-sorted row order.
     log.info("=== A. KC MCI single station (baseline) ===")
     df_kc = build_dataset(per_county_weather=False)
-    X_kc, y_kc, _ = prep(df_kc)
-    r_kc = train_model(X_kc, y_kc, model_type="gbr", cv=5)
+    X_kc, y_kc, df_kc_idx = prep(df_kc)
+    r_kc = train_model(X_kc, y_kc, model_type="gbr", cv=GroupKFold(n_splits=5),
+                       groups=df_kc_idx["county"].values)
 
     log.info("=== B. Daymet per-county weather ===")
     df_dm = build_dataset(per_county_weather=True)
     X_dm, y_dm, df_dm_idx = prep(df_dm)
-    r_dm = train_model(X_dm, y_dm, model_type="gbr", cv=5)
+    county_dm = df_dm_idx["county"].values
+    year_dm = df_dm_idx["year"].values
+    r_dm = train_model(X_dm, y_dm, model_type="gbr", cv=GroupKFold(n_splits=5),
+                       groups=county_dm)
 
     log.info("=== C. Daymet per-county + year fixed effects ===")
     yr_dummies = pd.get_dummies(df_dm_idx["year"], prefix="yr", dtype=float)
     X_dm_yr = pd.concat([X_dm, yr_dummies], axis=1)
-    r_dm_yr = train_model(X_dm_yr, y_dm, model_type="gbr", cv=5)
+    r_dm_yr = train_model(X_dm_yr, y_dm, model_type="gbr", cv=GroupKFold(n_splits=5),
+                          groups=county_dm)
+
+    # Honest forward-looking numbers. Year dummies are excluded: a held-out
+    # year's dummy is all-zero in training, so they can only hurt here.
+    log.info("=== E. Leave-one-year-out (forecast a new season) ===")
+    r_loyo = train_model(X_dm, y_dm, model_type="gbr", cv=LeaveOneGroupOut(),
+                         groups=year_dm)
+
+    log.info("=== F. Doubly blocked: unseen county x unseen year ===")
+    r_dbl = doubly_blocked_score(X_dm, y_dm, county_dm, year_dm)
+    log.info("Doubly blocked: CV R²=%.3f RMSE=%.2f", r_dbl["cv_r2"], r_dbl["cv_rmse"])
 
     log.info("")
     log.info("━" * 60)
@@ -181,6 +234,10 @@ def main():
              len(y_dm), X_dm_yr.shape[1], r_dm_yr["cv_r2"], r_dm_yr["cv_rmse"], r_dm_yr["train_r2"])
     log.info("  ΔR² (C − A) = %+.3f   ΔRMSE = %+.2f bu/acre",
              r_dm_yr["cv_r2"] - r_kc["cv_r2"], r_dm_yr["cv_rmse"] - r_kc["cv_rmse"])
+    log.info("  E. Leave-one-year-out : CV R²=%.3f RMSE=%.2f  (forecast a new season)",
+             r_loyo["cv_r2"], r_loyo["cv_rmse"])
+    log.info("  F. Doubly blocked     : CV R²=%.3f RMSE=%.2f  (new county, new season)",
+             r_dbl["cv_r2"], r_dbl["cv_rmse"])
     log.info("━" * 60)
 
     per_county = render_diagnostics(r_dm_yr, y_dm, df_dm_idx, tag="daymet")
@@ -207,6 +264,16 @@ def main():
         "daymet_only": {
             "cv_r2": float(r_dm_only["cv_r2"]),
             "cv_rmse": float(r_dm_only["cv_rmse"]),
+        },
+        "leave_one_year_out": {
+            "question": "forecast a new season, known counties (no year dummies)",
+            "cv_r2": float(r_loyo["cv_r2"]),
+            "cv_rmse": float(r_loyo["cv_rmse"]),
+        },
+        "doubly_blocked": {
+            "question": "new county, new season (no year dummies)",
+            "cv_r2": r_dbl["cv_r2"],
+            "cv_rmse": r_dbl["cv_rmse"],
         },
         "delta_best_vs_kc": {
             "cv_r2": float(r_dm_yr["cv_r2"] - r_kc["cv_r2"]),
