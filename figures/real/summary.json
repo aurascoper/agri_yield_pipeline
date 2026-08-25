@@ -1,4 +1,6 @@
 {
+  "variant": "B. GBR + KC single station",
+  "superseded_by": "summary_daymet.json",
   "n_samples": 1658,
   "n_counties": 97,
   "n_features": 106,
