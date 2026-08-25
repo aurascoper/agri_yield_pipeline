@@ -259,6 +259,11 @@ def fig_model_diagnostics(ndvi: pd.DataFrame, weather: pd.DataFrame, yields: pd.
 
     # stash summary for README
     summary = {
+        # This file records variant B only (GBR + KC single weather station). The
+        # headline model is variant D; quoting these numbers as the model's skill is
+        # the mistake this field exists to prevent.
+        "variant": "B. GBR + KC single station",
+        "superseded_by": "summary_daymet.json",
         "n_samples": int(len(X)),
         "n_counties": int(combined["county"].nunique()),
         "n_features": int(X.shape[1]),
