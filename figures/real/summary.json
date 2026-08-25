@@ -13,5 +13,11 @@
     "prcp_may_aug": 0.1265326445197791,
     "tmax_july_mean": 0.12512955624885866,
     "ndvi_mean_growing": 0.10732384455652902
-  }
+  },
+  "residual_basis": "per-county mean of held-out (out-of-fold) residuals",
+  "counties_scored": 97,
+  "counties_bias_within_2_buacre": 15,
+  "counties_bias_within_5_buacre": 35,
+  "counties_bias_above_10_buacre": 34,
+  "statewide_mean_residual_buacre": 1.6024053916513996
 }

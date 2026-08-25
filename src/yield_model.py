@@ -214,7 +214,12 @@ def train_model(
         'train_rmse': train_rmse,
         'train_r2': train_r2,
         'feature_importance': feat_imp,
+        # In-sample. Use for train_r2 only; a residual chart built from this shows
+        # how well the model memorised, and reads as skill next to a CV title.
         'y_pred_train': pd.Series(y_pred, index=idx),
+        # Out-of-fold, from the same CV that produced cv_r2/cv_rmse above. This is
+        # what every diagnostic that sits under a CV number should be drawn from.
+        'y_pred_oof': pd.Series(y_oof, index=idx),
         'y_true_train': y,
     }
 

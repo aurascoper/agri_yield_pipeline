@@ -6,20 +6,27 @@ End-to-end agricultural monitoring system: satellite NDVI (Sentinel-2 via Google
 
 **Data (2001–2023, 97 MO counties, 1,658 county-years):**
 
+- **Forecasting is the harder number, and it is the one that counts.** Blocking
+  by county alone (gap-fill a held-out county in a year the model has seen)
+  gives R² 0.709. Holding out the *season* gives **0.556**, and holding out
+  county and season together **0.483**. Quote the forecast numbers unless the
+  task really is gap-fill. Full table under [ML Results](#ml-results).
 - **NDVI → yield signal is real but heterogeneous.** Pearson r = 0.52 between
-  peak summer NDVI and corn yield statewide; GBR CV R² = 0.678 vs 0.785 for the
-  6 homogeneous NW-county subset. A single state-wide regression
-  under-predicts on the glacial-till corn belt and over-predicts on Ozark
-  pasture / Bootheel rice paddies.
+  peak summer NDVI and corn yield statewide. A single state-wide fit
+  under-predicts the Bootheel and the Missouri River bottom and over-predicts
+  Ozark pasture, by 15–35 bu/acre in the worst counties — see the per-county
+  bias section, which measures this on held-out predictions.
 - **July is the hinge month.** `ndvi_july` is the single most important
-  feature (0.28), followed by `drought_flag` (0.15), `prcp_may_aug` (0.13),
-  and `tmax_july_mean` (0.13). Pollination-window stress dominates annual
-  yield variance.
+  feature (0.28), followed by `tmax_july_mean` (0.17), `ndvi_mean_growing`
+  (0.11), `ndvi_june` (0.08), and `drought_flag` (0.07). Pollination-window
+  stress dominates annual yield variance. (Variant D; the KC-station variant B
+  ranked `prcp_may_aug` third, which per-county Daymet weather displaces.)
 - **Known drought years show up cleanly** in the statewide trend lines for
   2012 and 2022 across corn / soy / sorghum — sanity check that MODIS +
   GHCND + NASS are aligned.
-- **GBR beats Ridge by ~3×** on R² (0.678 vs 0.189). The 97 county one-hot
-  features are too coarse for a linear model to recover per-region intercepts.
+- **GBR beats Ridge by ~3.6×** on R² — 0.678 vs 0.189, both on the same
+  KC-station feature set (variants B and A). The 97 county one-hot features
+  are too coarse for a linear model to recover per-region intercepts.
 - **Top corn counties** in the 2015–2023 average cluster along the Missouri
   River bottom (Atchison, Holt, Nodaway, Andrew, Buchanan) — consistent with
   published USDA rankings.
@@ -124,9 +131,12 @@ the model loses its implicit year effect. Adding explicit year dummies
 weather deviations on top — best of both worlds, +3 points of R² over
 the KC baseline.
 
-Counties with the biggest residual improvement under Daymet are exactly
-the ones whose climate differs most from KC: Madison (bias −30 → −15),
-Wright (+13 → +7), Dent (−33 → −28).
+Counties with the biggest held-out bias improvement under Daymet, among those
+with ≥10 years of corn history: Jackson (+38.6 → +24.9), Atchison (−7.5 →
+−1.6), Audrain (−20.8 → −16.1), Butler (+12.2 → +8.3). Madison, Wright and
+Dent improve more in absolute terms but each has a **single** corn-yield year
+in the corpus, so their bias is one prediction and not a trend — seven
+counties are in that position.
 
 **Models.** *Ridge* is L2-penalized linear regression (`sklearn.linear_model.Ridge`);
 adding `α‖β‖²` to the loss stabilizes coefficients when features are correlated —
@@ -134,17 +144,23 @@ adding `α‖β‖²` to the loss stabilizes coefficients when features are corr
 dummies are near-collinear with the intercept. It's the baseline sanity check.
 *GBR* is the Gradient Boosting Regressor (`sklearn.ensemble.GradientBoostingRegressor`,
 100 trees × depth 3, lr 0.1, subsample 0.8) — an ensemble that fits each new tree
-to the residuals of the prior ensemble. It wins by ~3× here (R² 0.678 vs 0.189)
-because it captures the non-linear NDVI→yield saturation, the drought × NDVI
-interaction, and per-county intercepts — all of which a linear model either
-can't represent or has its coefficients shrunk away.
+to the residuals of the prior ensemble. It wins by ~3.6× on the same features
+(variant B 0.678 vs variant A 0.189) because it captures the non-linear
+NDVI→yield saturation, the drought × NDVI interaction, and per-county
+intercepts — all of which a linear model either can't represent or has its
+coefficients shrunk away.
 
-Top GBR features (statewide): `ndvi_july` (0.28), `drought_flag` (0.15),
-`prcp_may_aug` (0.13), `tmax_july_mean` (0.13), `ndvi_mean_growing` (0.11).
-Going from 6 homogeneous NW counties (R²=0.785) to all 97 yield-bearing
-counties (R²=0.678) reflects real agroclimatic heterogeneity: the Bootheel
-rice paddies, Ozark pasture, and Glacial-till corn belt don't share a single
-NDVI→yield slope.
+Top GBR features, variant D (`figures/real/summary_daymet.json`): `ndvi_july`
+(0.28), `tmax_july_mean` (0.17), `ndvi_mean_growing` (0.11), `ndvi_june`
+(0.08), `drought_flag` (0.07). Variant B, on KC-station weather, put
+`drought_flag` (0.15) and `prcp_may_aug` (0.13) second and third; per-county
+Daymet temperature displaces both, which is the same result the correlation
+maps show — July heat tracks yield in 84 of 85 counties.
+
+Agroclimatic heterogeneity is real, and the per-county bias section below
+measures it directly on held-out predictions: the Bootheel, the Missouri River
+bottom, and the Ozark plateau do not share a single NDVI→yield slope, and a
+statewide fit misses them by 15–35 bu/acre.
 
 ### Best model — GBR + Daymet + year FE (CV R²=0.709)
 
@@ -196,29 +212,48 @@ real weather-response signal the statewide GBR is exploiting.
 ![Residuals by county — Daymet + year FE](figures/real/residuals_by_county_daymet.png)
 
 **Reading the residuals chart.** Each horizontal bar is the mean of
-`actual − predicted` corn yield for one county across all years.
-**Green (positive)** → GBR *under-predicts* (actual is higher than modeled).
-**Red (negative)** → GBR *over-predicts* (actual is lower). Bar length is the
-bias magnitude in bu/acre. Across the 97 counties: 16 are within ±2 bu/acre,
-44 within ±5, and only 7 exceed |10|; the statewide mean residual is
-−1.3 bu/acre, so there is no global offset.
+`actual − predicted` corn yield for one county across all years, computed from
+**held-out (out-of-fold) predictions** — the same county-blocked CV that
+produces the R² above, so the bars show bias on counties the model did not
+train on. **Green (positive)** → GBR *under-predicts* (actual is higher than
+modeled). **Red (negative)** → GBR *over-predicts* (actual is lower).
+
+Across the 97 counties (variant D): **17 are within ±2 bu/acre of zero bias,
+37 within ±5, and 31 exceed |10|**; the statewide mean residual is
++1.2 bu/acre, so there is no large global offset — the error is regional, not
+a shift. The KC baseline (variant B) is worse on all three: 15 / 35 / 34.
+
+**These are counts of counties, and they measure bias, not accuracy.** A
+county predicted +20 one year and −20 the next has a mean residual of zero and
+lands in the first bucket. The accuracy numbers are the RMSEs in the tables
+above. Both sets of counts are written to `figures/real/summary*.json` under
+`counties_bias_*`, alongside the `residual_basis` field that says which
+predictions they came from.
+
+> Earlier revisions of this section reported 16 / 44 / 7 and a −1.3 statewide
+> mean. Those were computed from **in-sample** predictions — the diagnostics
+> were drawn from `pipe.predict(X)` after fitting on all of `X`, while sitting
+> under a CV headline. The out-of-fold numbers above are what the same code
+> reports now that it uses the CV predictions it was already computing.
 
 The geographic pattern is the real story:
 
-| Region                       | Bias direction             | Representative counties                                           |
+| Region                       | Bias direction             | Representative counties (held-out mean bias, bu/acre)             |
 |------------------------------|----------------------------|-------------------------------------------------------------------|
-| Missouri River bottom (loess)| green / under-predicted    | Buchanan +8.5, Platte +7.3, Lafayette +7.2, Chariton +7.6, Ray +7.6 |
-| Bootheel alluvial plain      | green / under-predicted    | Scott +7.7, New Madrid +7.6                                       |
-| Ozark plateau                | red / over-predicted       | Christian −11, Dallas −10, Texas −8.8, Wayne −8.3                 |
-| Single-year outliers (n=1)   | large red tails            | Dent −33, Madison −30, Pulaski −21                                |
+| Missouri River bottom (loess)| green / under-predicted    | Platte +16.6, Ray +14.5, Lafayette +11.7, Buchanan +9.9, Chariton +7.8 |
+| Bootheel alluvial plain      | green / under-predicted    | Scott +35.4, Mississippi +28.5, Stoddard +27.9, New Madrid +19.8   |
+| Ozark plateau                | red / over-predicted       | Christian −18.9, Wayne −16.2, Texas −16.0, Dallas −9.8            |
+| Single-year counties (n=1)   | large red tails            | Dent −46.8, Pulaski −36.9, Madison −34.3, Stone −27.8             |
 
 GBR is **helpful everywhere** — it still beats Ridge ~3× on every subset —
 but it has been shrunk toward the statewide mean for the tail regions. The
 Missouri River bottom genuinely out-yields what NDVI + weather alone predict
 (richer soils, irrigation); the Ozarks genuinely under-yield (corn is
-marginal acreage). The negative `mean ↔ std` correlation (−0.22) says
-biased counties also have higher variance, another sign that distinct
-agro-regions are being blended into a single fit. Two fixes worth exploring:
+marginal acreage). Held out, the per-county `mean ↔ std` correlation is
+−0.06 — essentially nothing, so bias magnitude and within-county variance are
+independent, and the regional offset is a systematic level error rather than
+noisier counties drifting. (An earlier −0.22 came from the in-sample
+residuals.) Two fixes worth exploring:
 (1) per-region GBR (river bottom / Ozark / Bootheel / N-Missouri), or
 (2) additional features — soil class, elevation, irrigated-acre fraction —
 so the model can separate *low NDVI because Ozark pasture* from *low NDVI
