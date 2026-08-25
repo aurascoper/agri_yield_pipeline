@@ -238,8 +238,8 @@ def fig_model_diagnostics(ndvi: pd.DataFrame, weather: pd.DataFrame, yields: pd.
     plt.close(fig)
     log.info("Saved %s", out)
 
-    # residuals by county
-    residuals = (y - result["y_pred_train"]).to_frame("residual")
+    # residuals by county, from held-out predictions (the chart sits under a CV number)
+    residuals = (y - result["y_pred_oof"]).to_frame("residual")
     residuals["county"] = [ix.rsplit("_", 1)[0] for ix in residuals.index]
     per_county = residuals.groupby("county")["residual"].agg(["mean", "std", "count"])
     per_county = per_county.sort_values("mean")
@@ -248,8 +248,8 @@ def fig_model_diagnostics(ndvi: pd.DataFrame, weather: pd.DataFrame, yields: pd.
     colors = ["firebrick" if m < 0 else "seagreen" for m in per_county["mean"]]
     ax.barh(per_county.index, per_county["mean"], color=colors)
     ax.axvline(0, color="k", linewidth=0.7)
-    ax.set_xlabel("Mean residual (bu/acre)  [actual - predicted]")
-    ax.set_title("Per-county bias — GBR on statewide corn yields")
+    ax.set_xlabel("Mean held-out residual (bu/acre)  [actual - predicted]")
+    ax.set_title("Per-county bias — GBR on statewide corn yields (county-blocked CV)")
     ax.tick_params(axis="y", labelsize=6)
     fig.tight_layout()
     out = FIGS / "residuals_by_county.png"
@@ -271,6 +271,14 @@ def fig_model_diagnostics(ndvi: pd.DataFrame, weather: pd.DataFrame, yields: pd.
         "gbr_cv_rmse": float(result["cv_rmse"]),
         "gbr_train_r2": float(result["train_r2"]),
         "top_features": fi_base.head(5).to_dict(),
+        # Counts of *counties* by held-out mean residual, i.e. bias, not accuracy:
+        # a county predicted +20 and -20 has mean 0 and lands in the first bucket.
+        "residual_basis": "per-county mean of held-out (out-of-fold) residuals",
+        "counties_scored": int(len(per_county)),
+        "counties_bias_within_2_buacre": int((per_county["mean"].abs() < 2).sum()),
+        "counties_bias_within_5_buacre": int((per_county["mean"].abs() < 5).sum()),
+        "counties_bias_above_10_buacre": int((per_county["mean"].abs() >= 10).sum()),
+        "statewide_mean_residual_buacre": float(residuals["residual"].mean()),
     }
     (FIGS / "summary.json").write_text(json.dumps(summary, indent=2))
     log.info("Summary: %s", summary)

@@ -158,12 +158,12 @@ def render_diagnostics(result, y, df, tag: str):
     cmap = plt.cm.tab20
     for i, c in enumerate(sorted(counties)):
         mask = df["county"] == c
-        ax.scatter(y[mask], result["y_pred_train"][mask], alpha=0.55, s=22,
+        ax.scatter(y[mask], result["y_pred_oof"][mask], alpha=0.55, s=22,
                    color=cmap(i % 20), edgecolors="none")
     lo, hi = y.min() - 5, y.max() + 5
     ax.plot([lo, hi], [lo, hi], "k--", linewidth=1, alpha=0.5)
     ax.set_xlabel("Actual yield (bu/acre)")
-    ax.set_ylabel("Predicted yield (bu/acre)")
+    ax.set_ylabel("Predicted yield, held out (bu/acre)")
     ax.set_title(f"GBR (Daymet per county) — CV R²={result['cv_r2']:.3f} RMSE={result['cv_rmse']:.1f}")
     ax.grid(alpha=0.3)
     fig.tight_layout()
@@ -171,8 +171,8 @@ def render_diagnostics(result, y, df, tag: str):
     fig.savefig(out, dpi=150); plt.close(fig)
     log.info("Saved %s", out)
 
-    # residuals
-    residuals = (y - result["y_pred_train"]).to_frame("residual")
+    # residuals, from held-out predictions (the chart sits under a CV number)
+    residuals = (y - result["y_pred_oof"]).to_frame("residual")
     residuals["county"] = df["county"].values
     per_county = residuals.groupby("county")["residual"].agg(["mean", "std", "count"])
     per_county = per_county.sort_values("mean")
@@ -180,7 +180,7 @@ def render_diagnostics(result, y, df, tag: str):
     colors = ["firebrick" if m < 0 else "seagreen" for m in per_county["mean"]]
     ax.barh(per_county.index, per_county["mean"], color=colors)
     ax.axvline(0, color="k", linewidth=0.7)
-    ax.set_xlabel("Mean residual (bu/acre)  [actual − predicted]")
+    ax.set_xlabel("Mean held-out residual (bu/acre)  [actual − predicted]")
     ax.set_title(f"GBR residuals per county (Daymet) — {len(per_county)} counties")
     fig.tight_layout()
     out = FIGS / f"residuals_by_county_{tag}.png"
@@ -279,9 +279,17 @@ def main():
             "cv_r2": float(r_dm_yr["cv_r2"] - r_kc["cv_r2"]),
             "cv_rmse": float(r_dm_yr["cv_rmse"] - r_kc["cv_rmse"]),
         },
-        "residuals_within_2_buacre": int((per_county["mean"].abs() < 2).sum()),
-        "residuals_within_5_buacre": int((per_county["mean"].abs() < 5).sum()),
-        "residuals_above_10_buacre": int((per_county["mean"].abs() >= 10).sum()),
+        # Counts of *counties* by held-out mean residual, i.e. bias, not accuracy:
+        # a county predicted +20 and -20 has mean 0 and lands in the first bucket.
+        # Named explicitly because the old `residuals_within_2_buacre: 19` read as
+        # "19% of predictions within 2 bu/ac" and was none of those three things.
+        "residual_basis": "per-county mean of held-out (out-of-fold) residuals",
+        "counties_scored": int(len(per_county)),
+        "counties_bias_within_2_buacre": int((per_county["mean"].abs() < 2).sum()),
+        "counties_bias_within_5_buacre": int((per_county["mean"].abs() < 5).sum()),
+        "counties_bias_above_10_buacre": int((per_county["mean"].abs() >= 10).sum()),
+        "statewide_mean_residual_buacre": float(
+            np.average(per_county["mean"], weights=per_county["count"])),
     }
     (FIGS / "summary_daymet.json").write_text(json.dumps(summary, indent=2))
     log.info("Saved %s", FIGS / "summary_daymet.json")

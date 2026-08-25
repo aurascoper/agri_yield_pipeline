@@ -119,7 +119,7 @@ def build_multi_county_features(ndvi: pd.DataFrame, weather: pd.DataFrame,
 
 def plot_model_results(result: dict, title_suffix: str, path: Path):
     y_true = result["y_true_train"]
-    y_pred = result["y_pred_train"]
+    y_pred = result["y_pred_oof"]  # panel titles quote CV metrics; draw the CV predictions
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
     ax = axes[0]
@@ -127,7 +127,7 @@ def plot_model_results(result: dict, title_suffix: str, path: Path):
     lo, hi = min(y_true.min(), y_pred.min()) - 5, max(y_true.max(), y_pred.max()) + 5
     ax.plot([lo, hi], [lo, hi], "r--")
     ax.set_xlabel("Actual yield (bu/acre)")
-    ax.set_ylabel("Predicted yield (bu/acre)")
+    ax.set_ylabel("Predicted yield, held out (bu/acre)")
     ax.set_title(f"{title_suffix} | CV R²={result['cv_r2']:.3f}, RMSE={result['cv_rmse']:.1f}")
 
     ax = axes[1]
