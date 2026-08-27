@@ -1,0 +1,3506 @@
+{
+  "schema_version": 1,
+  "source_repo": "agri_yield_pipeline",
+  "source_git_sha": "cb9ce936b3de89ad9b17d97972af44bb3099f388",
+  "generated_at": "2026-08-27T03:17:13.727422+00:00",
+  "cells_sha256": "39a9835e82d489831fe74e7b33c74e0f55d594a44f508be50836f98061700794",
+  "provenance": {
+    "ndvi": {
+      "class": "reference",
+      "note": "County-level MODIS-derived snapshot. The weekly GEE refresh automation (.github/workflows/refresh_counties.yml) has failed every run since 2026-04-27 -- missing GEE service-account secrets, and the workflow never installs python-dotenv. This is a one-time manual export, not a live feed.",
+      "vintage_field": "per-cell ndvi.as_of"
+    },
+    "sar": {
+      "class": "reference",
+      "note": "Same broken-automation caveat as ndvi -- see provenance.ndvi.note.",
+      "vintage_field": "per-cell sar_vv_db.as_of"
+    },
+    "weather": {
+      "class": "reference",
+      "note": "July anomaly vs prior years, computed from the last complete year in the 2001-2023 Daymet corpus. No weather feed in this repo (Daymet or the single-station NOAA series) extends past 2023-12-31 -- this is a dated historical data point, not current weather.",
+      "vintage_field": "per-cell weather.as_of"
+    },
+    "yield_sensitivity": {
+      "class": "reference",
+      "note": "Static historical correlation table, 2001-2023, unchanged per export.",
+      "source": "figures/real/daymet_correlation_per_county.parquet"
+    }
+  },
+  "cells": [
+    {
+      "id": "county:mo:adair",
+      "kind": "county",
+      "name": "Adair",
+      "state": "MO",
+      "lat": 40.190666,
+      "lon": -92.603592,
+      "ndvi": {
+        "value": 0.3890587121732933,
+        "baseline_mu": 0.5999959309469314,
+        "baseline_sigma": 0.05749053158398224,
+        "z": -3.669077550022315,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.34189149560116405,
+        "tmax_z": 0.10303171906149573,
+        "precip_anomaly_mm": -0.10008797653958812,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6545040082745449,
+        "r_prcp_yield": 0.024805263283141442,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -9.683530841180474,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:andrew",
+      "kind": "county",
+      "name": "Andrew",
+      "state": "MO",
+      "lat": 39.988863,
+      "lon": -94.803551,
+      "ndvi": {
+        "value": 0.3071910548684497,
+        "baseline_mu": 0.5090727519206041,
+        "baseline_sigma": 0.04402702037284611,
+        "z": -4.585404493479325,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": -0.08014662756597346,
+        "tmax_z": -0.024997350837250926,
+        "precip_anomaly_mm": -0.6668035190615833,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7225767717192018,
+        "r_prcp_yield": 0.411789963414205,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.042100789174038,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:atchison",
+      "kind": "county",
+      "name": "Atchison",
+      "state": "MO",
+      "lat": 40.431846,
+      "lon": -95.437555,
+      "ndvi": {
+        "value": 0.24411382485121103,
+        "baseline_mu": 0.35122192986764134,
+        "baseline_sigma": 0.037376937636281506,
+        "z": -2.8656201334285156,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-18"
+      },
+      "weather": {
+        "tmax_anomaly_c": -0.3781671554252206,
+        "tmax_z": -0.12199199651030135,
+        "precip_anomaly_mm": 1.3886510263929615,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6903242211421571,
+        "r_prcp_yield": 0.42077767267118005,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.773587161664555,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:audrain",
+      "kind": "county",
+      "name": "Audrain",
+      "state": "MO",
+      "lat": 39.214481,
+      "lon": -91.843418,
+      "ndvi": {
+        "value": 0.35332306468263663,
+        "baseline_mu": 0.5097065002093586,
+        "baseline_sigma": 0.04283681529102739,
+        "z": -3.6506783817675186,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.0304545454545462,
+        "tmax_z": 0.32050611445372745,
+        "precip_anomaly_mm": -2.204032258064517,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.652461933070895,
+        "r_prcp_yield": 0.4354173910397422,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.978871870376127,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:barry",
+      "kind": "county",
+      "name": "Barry",
+      "state": "MO",
+      "lat": 36.699376,
+      "lon": -93.834334,
+      "ndvi": {
+        "value": 0.5510090417008251,
+        "baseline_mu": 0.7450503130505419,
+        "baseline_sigma": 0.04549237610754765,
+        "z": -4.265358021550415,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.41703812316715627,
+        "tmax_z": 0.14875107299049767,
+        "precip_anomaly_mm": -0.5675806451612901,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7895204305579198,
+        "r_prcp_yield": 0.5247361189818078,
+        "n_years": 19,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.50888078498816,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:barton",
+      "kind": "county",
+      "name": "Barton",
+      "state": "MO",
+      "lat": 37.500799,
+      "lon": -94.344089,
+      "ndvi": {
+        "value": 0.5312204416781737,
+        "baseline_mu": 0.6449052485129609,
+        "baseline_sigma": 0.04045739074223002,
+        "z": -2.8099886015664706,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.8943401759530722,
+        "tmax_z": 0.31589289140346916,
+        "precip_anomaly_mm": -1.7853079178885634,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7894663895758266,
+        "r_prcp_yield": 0.340613253671476,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.801563235591455,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:bates",
+      "kind": "county",
+      "name": "Bates",
+      "state": "MO",
+      "lat": 38.257217,
+      "lon": -94.339246,
+      "ndvi": {
+        "value": 0.37257977681504045,
+        "baseline_mu": 0.6447634258964792,
+        "baseline_sigma": 0.04587359852754641,
+        "z": -5.933339825477098,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.8603372434017587,
+        "tmax_z": 0.29094383082576264,
+        "precip_anomaly_mm": -1.8566862170087979,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.5218847348558725,
+        "r_prcp_yield": 0.497709857380081,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.272727487065426,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:benton",
+      "kind": "county",
+      "name": "Benton",
+      "state": "MO",
+      "lat": 38.301036,
+      "lon": -93.287942,
+      "ndvi": {
+        "value": 0.3854787437233435,
+        "baseline_mu": 0.6553330196756757,
+        "baseline_sigma": 0.08394811386016048,
+        "z": -3.2145364981261095,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.6220821114369528,
+        "tmax_z": 0.5444565184590856,
+        "precip_anomaly_mm": -1.3506598240469208,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6756391469883061,
+        "r_prcp_yield": 0.7204002239098093,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -8.488131332188255,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:bollinger",
+      "kind": "county",
+      "name": "Bollinger",
+      "state": "MO",
+      "lat": 37.318427,
+      "lon": -90.024645,
+      "ndvi": {
+        "value": 0.43531220883110794,
+        "baseline_mu": 0.7242224810639142,
+        "baseline_sigma": 0.07320569593064447,
+        "z": -3.9465545482488364,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.948460410557189,
+        "tmax_z": 0.34258229453813527,
+        "precip_anomaly_mm": -1.478856304985337,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.47540102204219115,
+        "r_prcp_yield": 0.19041126260868216,
+        "n_years": 19,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.006394472376764,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:boone",
+      "kind": "county",
+      "name": "Boone",
+      "state": "MO",
+      "lat": 38.989861,
+      "lon": -92.310202,
+      "ndvi": {
+        "value": 0.3910486320030967,
+        "baseline_mu": 0.6380834983949184,
+        "baseline_sigma": 0.05102266857419441,
+        "z": -4.841668875719367,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.3696041055718524,
+        "tmax_z": 0.42394547986944237,
+        "precip_anomaly_mm": -2.098401759530791,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7374788101966436,
+        "r_prcp_yield": 0.2981701998903801,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.338215783944834,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:buchanan",
+      "kind": "county",
+      "name": "Buchanan",
+      "state": "MO",
+      "lat": 39.660369,
+      "lon": -94.808173,
+      "ndvi": {
+        "value": 0.32335414568381643,
+        "baseline_mu": 0.5088831450096959,
+        "baseline_sigma": 0.040498611304913355,
+        "z": -4.581120027277843,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": -0.09098240469208108,
+        "tmax_z": -0.028092313268418528,
+        "precip_anomaly_mm": -0.44016129032258045,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6514068558544315,
+        "r_prcp_yield": 0.23016521793920608,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.585963354401011,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:butler",
+      "kind": "county",
+      "name": "Butler",
+      "state": "MO",
+      "lat": 36.71518,
+      "lon": -90.40313,
+      "ndvi": {
+        "value": 0.24785918024457307,
+        "baseline_mu": 0.5422089570064489,
+        "baseline_sigma": 0.037261588557240266,
+        "z": -7.899549862446242,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.34629032258064996,
+        "tmax_z": 0.1312483968648404,
+        "precip_anomaly_mm": -1.4782697947214076,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.08329283541290351,
+        "r_prcp_yield": 0.3067190494858005,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -9.891636953857018,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:caldwell",
+      "kind": "county",
+      "name": "Caldwell",
+      "state": "MO",
+      "lat": 39.658998,
+      "lon": -93.979179,
+      "ndvi": {
+        "value": 0.4128448606512351,
+        "baseline_mu": 0.5842099075181485,
+        "baseline_sigma": 0.04706185493928105,
+        "z": -3.6412726843854255,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.3739296187683223,
+        "tmax_z": 0.11252701941591607,
+        "precip_anomaly_mm": -1.4714369501466282,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.720116880224839,
+        "r_prcp_yield": 0.5232328175723195,
+        "n_years": 21,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.166750402203995,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:callaway",
+      "kind": "county",
+      "name": "Callaway",
+      "state": "MO",
+      "lat": 38.835547,
+      "lon": -91.923446,
+      "ndvi": {
+        "value": 0.4149084179866529,
+        "baseline_mu": 0.6650203374680396,
+        "baseline_sigma": 0.06721712564351244,
+        "z": -3.720955293564038,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.5278885630498529,
+        "tmax_z": 0.4827323330405532,
+        "precip_anomaly_mm": -0.29636363636363594,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6394580975245734,
+        "r_prcp_yield": 0.45126582273616517,
+        "n_years": 18,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.54566674555365,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:camden",
+      "kind": "county",
+      "name": "Camden",
+      "state": "MO",
+      "lat": 38.026527,
+      "lon": -92.765327,
+      "ndvi": null,
+      "weather": {
+        "tmax_anomaly_c": 1.6305278592375352,
+        "tmax_z": 0.5609824675540674,
+        "precip_anomaly_mm": -1.0314956011730212,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -9.825841702327526,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:cape girardeau",
+      "kind": "county",
+      "name": "Cape Girardeau",
+      "state": "MO",
+      "lat": 37.384141,
+      "lon": -89.685658,
+      "ndvi": {
+        "value": 0.3980019463206543,
+        "baseline_mu": 0.6648710566465713,
+        "baseline_sigma": 0.03686180934830304,
+        "z": -7.239718153938163,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": null,
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6287500026448121,
+        "r_prcp_yield": 0.331237118436844,
+        "n_years": 21,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.747120645113695,
+        "as_of": "2026-04-11"
+      }
+    },
+    {
+      "id": "county:mo:carroll",
+      "kind": "county",
+      "name": "Carroll",
+      "state": "MO",
+      "lat": 39.427375,
+      "lon": -93.500227,
+      "ndvi": {
+        "value": 0.32216813261032595,
+        "baseline_mu": 0.5545290744595501,
+        "baseline_sigma": 0.04447316752467564,
+        "z": -5.224744599545339,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.9352932551319668,
+        "tmax_z": 0.28851688615762366,
+        "precip_anomaly_mm": -3.2576392961876826,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.5709512604750646,
+        "r_prcp_yield": 0.08120455480310725,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.32036256418496,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:carter",
+      "kind": "county",
+      "name": "Carter",
+      "state": "MO",
+      "lat": 36.944858,
+      "lon": -90.945705,
+      "ndvi": null,
+      "weather": {
+        "tmax_anomaly_c": 0.6914516129032222,
+        "tmax_z": 0.24539293457954686,
+        "precip_anomaly_mm": -0.4318328445747799,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -11.406936410509187,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:cass",
+      "kind": "county",
+      "name": "Cass",
+      "state": "MO",
+      "lat": 38.646474,
+      "lon": -94.354547,
+      "ndvi": {
+        "value": 0.37797943823885516,
+        "baseline_mu": 0.6256936562898116,
+        "baseline_sigma": 0.04430198638995924,
+        "z": -5.591492351392605,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.8376392961876924,
+        "tmax_z": 0.26998240765361753,
+        "precip_anomaly_mm": -0.8735923753665689,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7988332504027702,
+        "r_prcp_yield": 0.4984281041173262,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.071147161231265,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:cedar",
+      "kind": "county",
+      "name": "Cedar",
+      "state": "MO",
+      "lat": 37.733655,
+      "lon": -93.850014,
+      "ndvi": {
+        "value": 0.5391637884596221,
+        "baseline_mu": 0.6962142791386904,
+        "baseline_sigma": 0.052754088128278934,
+        "z": -2.9770297668150016,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.4526832844574784,
+        "tmax_z": 0.5072743275843723,
+        "precip_anomaly_mm": -2.3585337243401767,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.23437041432857678,
+        "r_prcp_yield": 0.184090022203434,
+        "n_years": 15,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.029838435339252,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:chariton",
+      "kind": "county",
+      "name": "Chariton",
+      "state": "MO",
+      "lat": 39.517968,
+      "lon": -92.96162,
+      "ndvi": {
+        "value": 0.35044134526198795,
+        "baseline_mu": 0.5523805588647227,
+        "baseline_sigma": 0.04500048805714053,
+        "z": -4.487489410033003,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.7340909090909093,
+        "tmax_z": 0.22634751983509457,
+        "precip_anomaly_mm": -2.4252199413489732,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6793787949907083,
+        "r_prcp_yield": 0.37580763358195207,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.637944594703443,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:christian",
+      "kind": "county",
+      "name": "Christian",
+      "state": "MO",
+      "lat": 36.969739,
+      "lon": -93.187614,
+      "ndvi": {
+        "value": 0.5386279228573638,
+        "baseline_mu": 0.7255899246606462,
+        "baseline_sigma": 0.05675301776772736,
+        "z": -3.294309433349612,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.908636363636365,
+        "tmax_z": 0.31791932865880074,
+        "precip_anomaly_mm": 1.4934164222873894,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -13.215135923761553,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:clark",
+      "kind": "county",
+      "name": "Clark",
+      "state": "MO",
+      "lat": 40.407275,
+      "lon": -91.729472,
+      "ndvi": {
+        "value": 0.3309861609642766,
+        "baseline_mu": 0.526207622187328,
+        "baseline_sigma": 0.04943498133538394,
+        "z": -3.9490550203428167,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": -0.10397360703812808,
+        "tmax_z": -0.031822386092419844,
+        "precip_anomaly_mm": 0.8945601173020519,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7418596122387803,
+        "r_prcp_yield": -0.19997534999587144,
+        "n_years": 14,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.016470728249452,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:clay",
+      "kind": "county",
+      "name": "Clay",
+      "state": "MO",
+      "lat": 39.315551,
+      "lon": -94.421502,
+      "ndvi": {
+        "value": 0.34195166584681835,
+        "baseline_mu": 0.5843032659626453,
+        "baseline_sigma": 0.03927338030396258,
+        "z": -6.170887207571849,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.2939882697947205,
+        "tmax_z": 0.08925517739824572,
+        "precip_anomaly_mm": -1.5650879765395889,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7369127125773364,
+        "r_prcp_yield": 0.39354702730150243,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -12.750476560690016,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:clinton",
+      "kind": "county",
+      "name": "Clinton",
+      "state": "MO",
+      "lat": 39.608723,
+      "lon": -94.395803,
+      "ndvi": {
+        "value": 0.33000712158316714,
+        "baseline_mu": 0.5617460609426179,
+        "baseline_sigma": 0.04439714076302421,
+        "z": -5.2196816141018845,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.13847507331378495,
+        "tmax_z": 0.041585008968415924,
+        "precip_anomaly_mm": -1.3529032258064517,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7080348751173867,
+        "r_prcp_yield": 0.26390704922494623,
+        "n_years": 23,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.221418176359402,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:cole",
+      "kind": "county",
+      "name": "Cole",
+      "state": "MO",
+      "lat": 38.503233,
+      "lon": -92.280027,
+      "ndvi": {
+        "value": 0.4784282120176876,
+        "baseline_mu": 0.7046802077548754,
+        "baseline_sigma": 0.05515589149939467,
+        "z": -4.102045848350958,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.794149560117301,
+        "tmax_z": 0.5775420727565133,
+        "precip_anomaly_mm": -1.933563049853372,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.5626757185173258,
+        "r_prcp_yield": 0.30260579624839434,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.214031211351912,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:cooper",
+      "kind": "county",
+      "name": "Cooper",
+      "state": "MO",
+      "lat": 38.847093,
+      "lon": -92.810069,
+      "ndvi": {
+        "value": 0.4183305617956029,
+        "baseline_mu": 0.6260423726699592,
+        "baseline_sigma": 0.04593266856588386,
+        "z": -4.5220932586667235,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.4805571847507295,
+        "tmax_z": 0.4658729199396427,
+        "precip_anomaly_mm": -1.0478005865102635,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7636935924211383,
+        "r_prcp_yield": 0.5413115393263553,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.422936532217031,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:crawford",
+      "kind": "county",
+      "name": "Crawford",
+      "state": "MO",
+      "lat": 37.966559,
+      "lon": -91.313936,
+      "ndvi": {
+        "value": 0.6230573962863181,
+        "baseline_mu": 0.6740308921046615,
+        "baseline_sigma": 0.11424308582131758,
+        "z": -0.446184514816667,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.3482404692082106,
+        "tmax_z": 0.4501019750293808,
+        "precip_anomaly_mm": 1.1503372434017591,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -10.837187819947985,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:dade",
+      "kind": "county",
+      "name": "Dade",
+      "state": "MO",
+      "lat": 37.43235,
+      "lon": -93.854878,
+      "ndvi": {
+        "value": 0.5759079693389031,
+        "baseline_mu": 0.7169310743868718,
+        "baseline_sigma": 0.0462123550540341,
+        "z": -3.051632077245933,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.1660117302052733,
+        "tmax_z": 0.40548076888889323,
+        "precip_anomaly_mm": -1.9021847507331375,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7355978735120706,
+        "r_prcp_yield": 0.2211083797559365,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.561789772758427,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:dallas",
+      "kind": "county",
+      "name": "Dallas",
+      "state": "MO",
+      "lat": 37.683583,
+      "lon": -93.033815,
+      "ndvi": {
+        "value": 0.6271595227326394,
+        "baseline_mu": 0.7098131171249291,
+        "baseline_sigma": 0.06669060580994882,
+        "z": -1.2393588780379552,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.5258797653959029,
+        "tmax_z": 0.527586709242582,
+        "precip_anomaly_mm": -1.9737829912023466,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -8.460409387878547,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:daviess",
+      "kind": "county",
+      "name": "Daviess",
+      "state": "MO",
+      "lat": 39.962839,
+      "lon": -93.970053,
+      "ndvi": {
+        "value": 0.3467860592349902,
+        "baseline_mu": 0.5543118879329026,
+        "baseline_sigma": 0.051556691455362874,
+        "z": -4.025196785127022,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.21527859237536973,
+        "tmax_z": 0.06402033505804543,
+        "precip_anomaly_mm": -1.041363636363636,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6814440458699819,
+        "r_prcp_yield": 0.44622197846144424,
+        "n_years": 18,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.070826101379186,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:dekalb",
+      "kind": "county",
+      "name": "Dekalb",
+      "state": "MO",
+      "lat": 39.894665,
+      "lon": -94.40719,
+      "ndvi": null,
+      "weather": {
+        "tmax_anomaly_c": 0.06653958944281868,
+        "tmax_z": 0.020197901914224232,
+        "precip_anomaly_mm": -0.24725806451612886,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -14.108938153158642,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:dent",
+      "kind": "county",
+      "name": "Dent",
+      "state": "MO",
+      "lat": 37.603072,
+      "lon": -91.489717,
+      "ndvi": {
+        "value": 0.6116236876081191,
+        "baseline_mu": 0.6707849175780937,
+        "baseline_sigma": 0.09532967793642287,
+        "z": -0.6205961380613312,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.343489736070378,
+        "tmax_z": 0.4479619971326633,
+        "precip_anomaly_mm": -0.8043548387096773,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -10.481645858810348,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:douglas",
+      "kind": "county",
+      "name": "Douglas",
+      "state": "MO",
+      "lat": 36.946517,
+      "lon": -92.515892,
+      "ndvi": null,
+      "weather": {
+        "tmax_anomaly_c": 1.3247360703812276,
+        "tmax_z": 0.4714417071936766,
+        "precip_anomaly_mm": -0.6888416422287391,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -9.928946766645186,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:dunklin",
+      "kind": "county",
+      "name": "Dunklin",
+      "state": "MO",
+      "lat": 36.153025,
+      "lon": -90.062254,
+      "ndvi": {
+        "value": 0.3041214987509862,
+        "baseline_mu": 0.36569166629535155,
+        "baseline_sigma": 0.02606894444820962,
+        "z": -2.3618205051103978,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": -0.10898826979472176,
+        "tmax_z": -0.04445067707702521,
+        "precip_anomaly_mm": 0.38948680351906173,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.12244056724145104,
+        "r_prcp_yield": 0.28074142538629593,
+        "n_years": 21,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -12.449283051964592,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:franklin",
+      "kind": "county",
+      "name": "Franklin",
+      "state": "MO",
+      "lat": 38.413003,
+      "lon": -91.072832,
+      "ndvi": {
+        "value": 0.4485661495151586,
+        "baseline_mu": 0.6829698710886343,
+        "baseline_sigma": 0.09256332531098414,
+        "z": -2.5323606383624577,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.042815249266873,
+        "tmax_z": 0.33628652776020723,
+        "precip_anomaly_mm": 0.40297653958944224,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.804702780115559,
+        "r_prcp_yield": 0.3151366043567677,
+        "n_years": 21,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.888666458533422,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:gasconade",
+      "kind": "county",
+      "name": "Gasconade",
+      "state": "MO",
+      "lat": 38.441183,
+      "lon": -91.50578,
+      "ndvi": {
+        "value": 0.5135222525260568,
+        "baseline_mu": 0.6993087371039362,
+        "baseline_sigma": 0.08095676658836244,
+        "z": -2.2948851888136828,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.5550879765395855,
+        "tmax_z": 0.49874507083671465,
+        "precip_anomaly_mm": 1.2458944281524933,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.5474985013783846,
+        "r_prcp_yield": 0.1745773413297603,
+        "n_years": 23,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.855742233114166,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:gentry",
+      "kind": "county",
+      "name": "Gentry",
+      "state": "MO",
+      "lat": 40.208127,
+      "lon": -94.405321,
+      "ndvi": {
+        "value": 0.31980619692749024,
+        "baseline_mu": 0.54299576323784,
+        "baseline_sigma": 0.05001527217545441,
+        "z": -4.462428306446021,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.007609970674483435,
+        "tmax_z": 0.0023245161878333244,
+        "precip_anomaly_mm": -0.5846920821114381,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.3471328499225385,
+        "r_prcp_yield": 0.317935327009647,
+        "n_years": 16,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.21673236983312,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:greene",
+      "kind": "county",
+      "name": "Greene",
+      "state": "MO",
+      "lat": 37.258196,
+      "lon": -93.340641,
+      "ndvi": {
+        "value": 0.5322626505776867,
+        "baseline_mu": 0.6829358243526964,
+        "baseline_sigma": 0.040850590811731737,
+        "z": -3.688396441300388,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.0298826979472118,
+        "tmax_z": 0.35411091790867105,
+        "precip_anomaly_mm": 0.04639296187683284,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6162379703729698,
+        "r_prcp_yield": 0.6688324637635381,
+        "n_years": 14,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.687907988813716,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:grundy",
+      "kind": "county",
+      "name": "Grundy",
+      "state": "MO",
+      "lat": 40.112541,
+      "lon": -93.565054,
+      "ndvi": {
+        "value": 0.37009815740206925,
+        "baseline_mu": 0.5329213777272281,
+        "baseline_sigma": 0.04766602529078355,
+        "z": -3.415917717742694,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.08134897360703874,
+        "tmax_z": 0.024449210563642205,
+        "precip_anomaly_mm": -1.322551319648094,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.5968212763736042,
+        "r_prcp_yield": 0.3120430856337377,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -8.65539573832659,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:harrison",
+      "kind": "county",
+      "name": "Harrison",
+      "state": "MO",
+      "lat": 40.34562,
+      "lon": -93.992582,
+      "ndvi": {
+        "value": 0.3120827035864209,
+        "baseline_mu": 0.5493204699132572,
+        "baseline_sigma": 0.054384901808412,
+        "z": -4.362199037567105,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.10769794721407777,
+        "tmax_z": 0.03282353676102283,
+        "precip_anomaly_mm": -0.12052785923753673,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.587234658917543,
+        "r_prcp_yield": 0.34753562746997857,
+        "n_years": 15,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.075428195687987,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:henry",
+      "kind": "county",
+      "name": "Henry",
+      "state": "MO",
+      "lat": 38.386491,
+      "lon": -93.792628,
+      "ndvi": {
+        "value": 0.4183219400710844,
+        "baseline_mu": 0.6259364405549335,
+        "baseline_sigma": 0.0465152772192029,
+        "z": -4.463361564104353,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.4549413489736054,
+        "tmax_z": 0.4867309282285679,
+        "precip_anomaly_mm": -1.7665689149560113,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6090698795365393,
+        "r_prcp_yield": 0.54236010218466,
+        "n_years": 21,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.098369296988137,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:hickory",
+      "kind": "county",
+      "name": "Hickory",
+      "state": "MO",
+      "lat": 37.93691,
+      "lon": -93.322988,
+      "ndvi": {
+        "value": 0.5089865913761147,
+        "baseline_mu": 0.6833310451706393,
+        "baseline_sigma": 0.07069060451767138,
+        "z": -2.4663030537663824,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.7560850439882678,
+        "tmax_z": 0.5918978094347488,
+        "precip_anomaly_mm": -1.9833577712609967,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7933816621133889,
+        "r_prcp_yield": 0.17197791421235048,
+        "n_years": 13,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.20265798504393,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:holt",
+      "kind": "county",
+      "name": "Holt",
+      "state": "MO",
+      "lat": 40.095724,
+      "lon": -95.219072,
+      "ndvi": {
+        "value": 0.2499098899004189,
+        "baseline_mu": 0.39087531572173595,
+        "baseline_sigma": 0.03924801974266443,
+        "z": -3.59165702487866,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": -0.23033724340175965,
+        "tmax_z": -0.07297971055277853,
+        "precip_anomaly_mm": -0.3319061583577718,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6335257958948148,
+        "r_prcp_yield": 0.14341737537201277,
+        "n_years": 18,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.002912562317212,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:howard",
+      "kind": "county",
+      "name": "Howard",
+      "state": "MO",
+      "lat": 39.143365,
+      "lon": -92.695926,
+      "ndvi": {
+        "value": 0.37999572886760447,
+        "baseline_mu": 0.5933912551075246,
+        "baseline_sigma": 0.051419733092059154,
+        "z": -4.150070671465137,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.1205425219941354,
+        "tmax_z": 0.3456297323258056,
+        "precip_anomaly_mm": -2.7947947214076247,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7433871777900283,
+        "r_prcp_yield": 0.4174165966657178,
+        "n_years": 16,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.976931686655663,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:howell",
+      "kind": "county",
+      "name": "Howell",
+      "state": "MO",
+      "lat": 36.774369,
+      "lon": -91.887368,
+      "ndvi": {
+        "value": 0.47878592869613096,
+        "baseline_mu": 0.7024352336945385,
+        "baseline_sigma": 0.06488287244984249,
+        "z": -3.446969848187578,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.9062023460410487,
+        "tmax_z": 0.3178611221101609,
+        "precip_anomaly_mm": 0.9832844574780064,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -10.503697575023777,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:iron",
+      "kind": "county",
+      "name": "Iron",
+      "state": "MO",
+      "lat": 37.625971,
+      "lon": -90.699587,
+      "ndvi": null,
+      "weather": {
+        "tmax_anomaly_c": 1.7955278592375272,
+        "tmax_z": 0.5617015997937157,
+        "precip_anomaly_mm": -1.684120234604106,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -11.095235646598022,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:jackson",
+      "kind": "county",
+      "name": "Jackson",
+      "state": "MO",
+      "lat": 39.005364,
+      "lon": -94.343211,
+      "ndvi": {
+        "value": 0.3443529447391967,
+        "baseline_mu": 0.5823396432889327,
+        "baseline_sigma": 0.04249975503408301,
+        "z": -5.599719300943753,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.683563049853376,
+        "tmax_z": 0.21320060511867114,
+        "precip_anomaly_mm": -0.48498533724340076,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7303184775466021,
+        "r_prcp_yield": 0.5011696624364727,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.384470036946444,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:jasper",
+      "kind": "county",
+      "name": "Jasper",
+      "state": "MO",
+      "lat": 37.205197,
+      "lon": -94.337259,
+      "ndvi": {
+        "value": 0.573139076231591,
+        "baseline_mu": 0.6993515232211724,
+        "baseline_sigma": 0.041301333656488436,
+        "z": -3.055892771873082,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.9217888563049854,
+        "tmax_z": 0.3212850494302767,
+        "precip_anomaly_mm": -1.6908211143695016,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7663066466914938,
+        "r_prcp_yield": 0.48655190334691556,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.635040436632647,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:jefferson",
+      "kind": "county",
+      "name": "Jefferson",
+      "state": "MO",
+      "lat": 38.25763,
+      "lon": -90.543681,
+      "ndvi": {
+        "value": 0.5512288744926768,
+        "baseline_mu": 0.6857241756104893,
+        "baseline_sigma": 0.08240549199052842,
+        "z": -1.6321157470095708,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.019926686217012,
+        "tmax_z": 0.33311781143784175,
+        "precip_anomaly_mm": -1.2739002932551315,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6606657591812284,
+        "r_prcp_yield": 0.5427312230680552,
+        "n_years": 23,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.560864919467827,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:johnson",
+      "kind": "county",
+      "name": "Johnson",
+      "state": "MO",
+      "lat": 38.741528,
+      "lon": -93.811863,
+      "ndvi": {
+        "value": 0.3658050500497894,
+        "baseline_mu": 0.6463961210774984,
+        "baseline_sigma": 0.04603175884368324,
+        "z": -6.095597432645428,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.1442082111436989,
+        "tmax_z": 0.3730633754821872,
+        "precip_anomaly_mm": -2.571055718475073,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7479796373395622,
+        "r_prcp_yield": 0.5191258130991651,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.07516310690566,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:knox",
+      "kind": "county",
+      "name": "Knox",
+      "state": "MO",
+      "lat": 40.136856,
+      "lon": -92.146835,
+      "ndvi": {
+        "value": 0.37616036469961034,
+        "baseline_mu": 0.5615303789536827,
+        "baseline_sigma": 0.04791613806051889,
+        "z": -3.868634279748233,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.2662463343108499,
+        "tmax_z": 0.08101062909389839,
+        "precip_anomaly_mm": -0.8827126099706755,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7420493932810244,
+        "r_prcp_yield": 0.1257423413062187,
+        "n_years": 18,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -9.863721344353909,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:laclede",
+      "kind": "county",
+      "name": "Laclede",
+      "state": "MO",
+      "lat": 37.659698,
+      "lon": -92.594843,
+      "ndvi": {
+        "value": 0.6203350916157472,
+        "baseline_mu": 0.6946800631342002,
+        "baseline_sigma": 0.07016443814040346,
+        "z": -1.059581940493616,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.3733284457478057,
+        "tmax_z": 0.4811326834550306,
+        "precip_anomaly_mm": -1.0722873900293255,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.5244964900465969,
+        "r_prcp_yield": 0.1787922006700546,
+        "n_years": 19,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.406512545864475,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:lafayette",
+      "kind": "county",
+      "name": "Lafayette",
+      "state": "MO",
+      "lat": 39.068705,
+      "lon": -93.802639,
+      "ndvi": {
+        "value": 0.306816064193702,
+        "baseline_mu": 0.4899332504052499,
+        "baseline_sigma": 0.03704459628934329,
+        "z": -4.943155130677606,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.9933137829912013,
+        "tmax_z": 0.31080861603380694,
+        "precip_anomaly_mm": -1.996656891495601,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7531145793361675,
+        "r_prcp_yield": 0.32666307000137434,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.545582546506383,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:lawrence",
+      "kind": "county",
+      "name": "Lawrence",
+      "state": "MO",
+      "lat": 37.10659,
+      "lon": -93.830551,
+      "ndvi": {
+        "value": 0.5557332624834026,
+        "baseline_mu": 0.7344515580130841,
+        "baseline_sigma": 0.03850691026631069,
+        "z": -4.641200612920648,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.8924193548387152,
+        "tmax_z": 0.30811517256853665,
+        "precip_anomaly_mm": -1.6597653958944278,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.76473971023854,
+        "r_prcp_yield": 0.3614995969467959,
+        "n_years": 19,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.223176537889255,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:lewis",
+      "kind": "county",
+      "name": "Lewis",
+      "state": "MO",
+      "lat": 40.084559,
+      "lon": -91.728803,
+      "ndvi": {
+        "value": 0.38736703655494537,
+        "baseline_mu": 0.5349019678340617,
+        "baseline_sigma": 0.04946514057797538,
+        "z": -2.982604103723241,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.1968475073313769,
+        "tmax_z": 0.060247342115378334,
+        "precip_anomaly_mm": -1.2961583577712612,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7128205252302425,
+        "r_prcp_yield": 0.11567148905976385,
+        "n_years": 21,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.415384971622654,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:lincoln",
+      "kind": "county",
+      "name": "Lincoln",
+      "state": "MO",
+      "lat": 39.062255,
+      "lon": -90.962916,
+      "ndvi": {
+        "value": 0.4005610547420914,
+        "baseline_mu": 0.6300487926660382,
+        "baseline_sigma": 0.05052137883692143,
+        "z": -4.542388652232019,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.45315249266862523,
+        "tmax_z": 0.14814492436532156,
+        "precip_anomaly_mm": -1.337316715542523,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.731624770516959,
+        "r_prcp_yield": 0.5681662305409603,
+        "n_years": 18,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.440496659736995,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:linn",
+      "kind": "county",
+      "name": "Linn",
+      "state": "MO",
+      "lat": 39.86444,
+      "lon": -93.108019,
+      "ndvi": {
+        "value": 0.41964950304626786,
+        "baseline_mu": 0.5951192467252475,
+        "baseline_sigma": 0.050394595934583564,
+        "z": -3.4819158765903033,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.49787390029324996,
+        "tmax_z": 0.15350060424287482,
+        "precip_anomaly_mm": -2.9355131964809384,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6477136287839897,
+        "r_prcp_yield": 0.38554383460364006,
+        "n_years": 18,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -9.18623547667513,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:livingston",
+      "kind": "county",
+      "name": "Livingston",
+      "state": "MO",
+      "lat": 39.778587,
+      "lon": -93.548201,
+      "ndvi": {
+        "value": 0.3537796279048177,
+        "baseline_mu": 0.5312183260095393,
+        "baseline_sigma": 0.04724331462132205,
+        "z": -3.7558477750127897,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.48222873900293095,
+        "tmax_z": 0.14570575802519536,
+        "precip_anomaly_mm": -2.2638269794721406,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6010108200199826,
+        "r_prcp_yield": 0.3588557757193058,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -8.83578116730566,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:mcdonald",
+      "kind": "county",
+      "name": "Mcdonald",
+      "state": "MO",
+      "lat": 36.627955,
+      "lon": -94.343716,
+      "ndvi": {
+        "value": 0.4932188077271645,
+        "baseline_mu": 0.7508218971144167,
+        "baseline_sigma": 0.06449336878313515,
+        "z": -3.9942569949085183,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.7525953079178862,
+        "tmax_z": 0.2700225755453336,
+        "precip_anomaly_mm": 0.015527859237536745,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -12.347081627346991,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:macon",
+      "kind": "county",
+      "name": "Macon",
+      "state": "MO",
+      "lat": 39.829795,
+      "lon": -92.56434,
+      "ndvi": {
+        "value": 0.3783025351205495,
+        "baseline_mu": 0.5757269017376953,
+        "baseline_sigma": 0.06161546736668451,
+        "z": -3.2041364783007897,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.5037390029325479,
+        "tmax_z": 0.15300397091966375,
+        "precip_anomaly_mm": -1.8109237536656893,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7642023012900953,
+        "r_prcp_yield": 0.3785549899361041,
+        "n_years": 14,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.19784065152223,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:madison",
+      "kind": "county",
+      "name": "Madison",
+      "state": "MO",
+      "lat": 37.474481,
+      "lon": -90.343413,
+      "ndvi": {
+        "value": 0.560220762493522,
+        "baseline_mu": 0.7261788191588244,
+        "baseline_sigma": 0.09792511670742893,
+        "z": -1.694744537922131,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.3957771260997092,
+        "tmax_z": 0.47249199498124,
+        "precip_anomaly_mm": -1.3664662756598238,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -11.647634431691959,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:maries",
+      "kind": "county",
+      "name": "Maries",
+      "state": "MO",
+      "lat": 38.162615,
+      "lon": -91.923601,
+      "ndvi": {
+        "value": 0.5794895706379474,
+        "baseline_mu": 0.7159179172247087,
+        "baseline_sigma": 0.07971431051734887,
+        "z": -1.7114661809320835,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.6313489736070395,
+        "tmax_z": 0.5384343464983049,
+        "precip_anomaly_mm": -1.9130351906158358,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6787999499659957,
+        "r_prcp_yield": 0.3431998858946831,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.551418349484283,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:marion",
+      "kind": "county",
+      "name": "Marion",
+      "state": "MO",
+      "lat": 39.807538,
+      "lon": -91.635379,
+      "ndvi": {
+        "value": 0.40228982602133856,
+        "baseline_mu": 0.5735842296763453,
+        "baseline_sigma": 0.05109710000102795,
+        "z": -3.352331221371872,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.3445601173020556,
+        "tmax_z": 0.10542815945005053,
+        "precip_anomaly_mm": -1.8198973607038118,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7468980956262294,
+        "r_prcp_yield": 0.4494431968037945,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.297281247750384,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:mercer",
+      "kind": "county",
+      "name": "Mercer",
+      "state": "MO",
+      "lat": 40.421413,
+      "lon": -93.567631,
+      "ndvi": {
+        "value": 0.35019787468075675,
+        "baseline_mu": 0.58631094418677,
+        "baseline_sigma": 0.05557180432617765,
+        "z": -4.248792573301238,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": -0.0016715542521943405,
+        "tmax_z": -0.0005053792827914864,
+        "precip_anomaly_mm": 0.09120234604105582,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": 0.010778044437196783,
+        "r_prcp_yield": -0.3928611400476349,
+        "n_years": 13,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -8.818642153731341,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:miller",
+      "kind": "county",
+      "name": "Miller",
+      "state": "MO",
+      "lat": 38.21668,
+      "lon": -92.429876,
+      "ndvi": {
+        "value": 0.5395511707544492,
+        "baseline_mu": 0.716729781762353,
+        "baseline_sigma": 0.08319337643979781,
+        "z": -2.129720160307685,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.69227272727273,
+        "tmax_z": 0.5648763631937213,
+        "precip_anomaly_mm": -1.740073313782991,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6810524050622246,
+        "r_prcp_yield": 0.38976265911922203,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.113244817758964,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:mississippi",
+      "kind": "county",
+      "name": "Mississippi",
+      "state": "MO",
+      "lat": 36.826264,
+      "lon": -89.295929,
+      "ndvi": {
+        "value": 0.32082335708659493,
+        "baseline_mu": 0.4925438291238287,
+        "baseline_sigma": 0.029212474772381418,
+        "z": -5.878326755102065,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.6149706744867949,
+        "tmax_z": 0.23951637152146,
+        "precip_anomaly_mm": -2.530307917888563,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.5328613928645216,
+        "r_prcp_yield": 0.10964911914033033,
+        "n_years": 23,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.79876030744431,
+        "as_of": "2026-04-11"
+      }
+    },
+    {
+      "id": "county:mo:moniteau",
+      "kind": "county",
+      "name": "Moniteau",
+      "state": "MO",
+      "lat": 38.633037,
+      "lon": -92.583642,
+      "ndvi": {
+        "value": 0.4517827275134058,
+        "baseline_mu": 0.6901815393341509,
+        "baseline_sigma": 0.04610897423585872,
+        "z": -5.170334317160835,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.7077419354838668,
+        "tmax_z": 0.5465736647105659,
+        "precip_anomaly_mm": -2.286994134897361,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7101838762095966,
+        "r_prcp_yield": 0.4263378028070312,
+        "n_years": 19,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.227493159774037,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:monroe",
+      "kind": "county",
+      "name": "Monroe",
+      "state": "MO",
+      "lat": 39.49827,
+      "lon": -92.006458,
+      "ndvi": {
+        "value": 0.3642792977628814,
+        "baseline_mu": 0.554215379606934,
+        "baseline_sigma": 0.052159220914190944,
+        "z": -3.641467002670984,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.6813929618768313,
+        "tmax_z": 0.20937909861124263,
+        "precip_anomaly_mm": -2.444516129032259,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7782909399406146,
+        "r_prcp_yield": 0.5287360373066586,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.392709384202103,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:montgomery",
+      "kind": "county",
+      "name": "Montgomery",
+      "state": "MO",
+      "lat": 38.935184,
+      "lon": -91.465427,
+      "ndvi": {
+        "value": 0.4171821405252694,
+        "baseline_mu": 0.6038641187071677,
+        "baseline_sigma": 0.05694915941093079,
+        "z": -3.278046245333459,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.1124193548387034,
+        "tmax_z": 0.35684454733843274,
+        "precip_anomaly_mm": -1.6302932551319644,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.5482397794743348,
+        "r_prcp_yield": 0.6315984859029427,
+        "n_years": 19,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.415743105042708,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:morgan",
+      "kind": "county",
+      "name": "Morgan",
+      "state": "MO",
+      "lat": 38.420806,
+      "lon": -92.874835,
+      "ndvi": {
+        "value": 0.5142662850654187,
+        "baseline_mu": 0.6922834313183622,
+        "baseline_sigma": 0.0765789649283427,
+        "z": -2.324621995341928,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.6549706744868011,
+        "tmax_z": 0.5351837980462067,
+        "precip_anomaly_mm": -2.4872287390029326,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.680936820865031,
+        "r_prcp_yield": 0.5584619247414213,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -9.787995142286558,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:new madrid",
+      "kind": "county",
+      "name": "New Madrid",
+      "state": "MO",
+      "lat": 36.594261,
+      "lon": -89.655948,
+      "ndvi": {
+        "value": 0.27358019789258553,
+        "baseline_mu": 0.3457728840978374,
+        "baseline_sigma": 0.036256048202517495,
+        "z": -1.9911901540399835,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": null,
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.2789789191062603,
+        "r_prcp_yield": 0.37647006907941594,
+        "n_years": 21,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -9.521065740792716,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:newton",
+      "kind": "county",
+      "name": "Newton",
+      "state": "MO",
+      "lat": 36.908371,
+      "lon": -94.335034,
+      "ndvi": {
+        "value": 0.6358101201541061,
+        "baseline_mu": 0.7160679773595887,
+        "baseline_sigma": 0.045366404191774574,
+        "z": -1.7691033405736452,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.9031964809384192,
+        "tmax_z": 0.31767280135746945,
+        "precip_anomaly_mm": -1.6170821114369498,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.4619462028134937,
+        "r_prcp_yield": 0.5177199486061546,
+        "n_years": 14,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.112605829175152,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:nodaway",
+      "kind": "county",
+      "name": "Nodaway",
+      "state": "MO",
+      "lat": 40.361136,
+      "lon": -94.883146,
+      "ndvi": {
+        "value": 0.2895774558043008,
+        "baseline_mu": 0.4890270939912173,
+        "baseline_sigma": 0.04717622732308151,
+        "z": -4.22775727319199,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": -0.15709677419355117,
+        "tmax_z": -0.050285902468000396,
+        "precip_anomaly_mm": 0.33473607038123276,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6571341200612677,
+        "r_prcp_yield": 0.5611391710308944,
+        "n_years": 18,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.21626098204611,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:oregon",
+      "kind": "county",
+      "name": "Oregon",
+      "state": "MO",
+      "lat": 36.68531,
+      "lon": -91.401827,
+      "ndvi": null,
+      "weather": {
+        "tmax_anomaly_c": 0.7588123167155381,
+        "tmax_z": 0.2710275213067274,
+        "precip_anomaly_mm": 1.0973020527859236,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -11.360473911763682,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:osage",
+      "kind": "county",
+      "name": "Osage",
+      "state": "MO",
+      "lat": 38.464253,
+      "lon": -91.859504,
+      "ndvi": {
+        "value": 0.472416715292764,
+        "baseline_mu": 0.710599263691181,
+        "baseline_sigma": 0.05579593578334397,
+        "z": -4.268815372561929,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.8134310850439839,
+        "tmax_z": 0.580510894215296,
+        "precip_anomaly_mm": 0.33687683284457526,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6543988046785514,
+        "r_prcp_yield": 0.47772761883149445,
+        "n_years": 23,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.686749519698592,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:ozark",
+      "kind": "county",
+      "name": "Ozark",
+      "state": "MO",
+      "lat": 36.64959,
+      "lon": -92.458549,
+      "ndvi": null,
+      "weather": {
+        "tmax_anomaly_c": 0.7449413489736045,
+        "tmax_z": 0.26134495864445273,
+        "precip_anomaly_mm": 0.7810117302052788,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -10.919228395971922,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:pemiscot",
+      "kind": "county",
+      "name": "Pemiscot",
+      "state": "MO",
+      "lat": 36.209916,
+      "lon": -89.785942,
+      "ndvi": {
+        "value": 0.2940823938607684,
+        "baseline_mu": 0.37044403869350406,
+        "baseline_sigma": 0.035262844468075344,
+        "z": -2.1654987277577242,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.13014662756599193,
+        "tmax_z": 0.05363774241373709,
+        "precip_anomaly_mm": 0.10583577712609937,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.08719755338842554,
+        "r_prcp_yield": 0.1002074173257157,
+        "n_years": 19,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.982704710819393,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:perry",
+      "kind": "county",
+      "name": "Perry",
+      "state": "MO",
+      "lat": 37.71113,
+      "lon": -89.802125,
+      "ndvi": {
+        "value": 0.4537135111205604,
+        "baseline_mu": 0.679010379174174,
+        "baseline_sigma": 0.041309698242377006,
+        "z": -5.453849280905561,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.8233577712609979,
+        "tmax_z": 0.28607127816855776,
+        "precip_anomaly_mm": -0.8191495601173018,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7706566674480915,
+        "r_prcp_yield": 0.47580798275364616,
+        "n_years": 21,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.395527741989074,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:pettis",
+      "kind": "county",
+      "name": "Pettis",
+      "state": "MO",
+      "lat": 38.727367,
+      "lon": -93.285207,
+      "ndvi": {
+        "value": 0.4154987583891113,
+        "baseline_mu": 0.6371059211327333,
+        "baseline_sigma": 0.04144780105326683,
+        "z": -5.346656688947686,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.4302639296187714,
+        "tmax_z": 0.4604082780609938,
+        "precip_anomaly_mm": -1.4288856304985336,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7156480492908768,
+        "r_prcp_yield": 0.5057738401136549,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -9.720824501726927,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:phelps",
+      "kind": "county",
+      "name": "Phelps",
+      "state": "MO",
+      "lat": 37.866326,
+      "lon": -91.790349,
+      "ndvi": {
+        "value": 0.6069087876610509,
+        "baseline_mu": 0.6799702850541809,
+        "baseline_sigma": 0.09141074047322706,
+        "z": -0.7992660054485463,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.5481671554252188,
+        "tmax_z": 0.5233058504456004,
+        "precip_anomaly_mm": -0.8315982404692077,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -10.443683686454857,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:pike",
+      "kind": "county",
+      "name": "Pike",
+      "state": "MO",
+      "lat": 39.339959,
+      "lon": -91.171607,
+      "ndvi": {
+        "value": 0.3894182400505724,
+        "baseline_mu": 0.6266695221578474,
+        "baseline_sigma": 0.058515898601509596,
+        "z": -4.054475583173466,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.5219941348973549,
+        "tmax_z": 0.16442694355665935,
+        "precip_anomaly_mm": -1.7812023460410553,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7123630407426735,
+        "r_prcp_yield": 0.3904136024805659,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.818606697936263,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:platte",
+      "kind": "county",
+      "name": "Platte",
+      "state": "MO",
+      "lat": 39.37869,
+      "lon": -94.761477,
+      "ndvi": {
+        "value": 0.32695892520272474,
+        "baseline_mu": 0.5555142072923231,
+        "baseline_sigma": 0.03867008186281689,
+        "z": -5.910390438282602,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.15791788856304834,
+        "tmax_z": 0.048294354935407416,
+        "precip_anomaly_mm": -0.1681524926686211,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7656943878290594,
+        "r_prcp_yield": 0.42666348023400164,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.055440919641251,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:polk",
+      "kind": "county",
+      "name": "Polk",
+      "state": "MO",
+      "lat": 37.616761,
+      "lon": -93.400817,
+      "ndvi": {
+        "value": 0.5830924839466188,
+        "baseline_mu": 0.7267936889556725,
+        "baseline_sigma": 0.048497199917156265,
+        "z": -2.9630825131043963,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.4907771260997116,
+        "tmax_z": 0.5101273512822118,
+        "precip_anomaly_mm": -1.7923167155425226,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.5780928438349852,
+        "r_prcp_yield": 0.42761399808618394,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.331204882018573,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:pulaski",
+      "kind": "county",
+      "name": "Pulaski",
+      "state": "MO",
+      "lat": 37.824835,
+      "lon": -92.207022,
+      "ndvi": {
+        "value": 0.6067852593231873,
+        "baseline_mu": 0.6830035760208824,
+        "baseline_sigma": 0.09107997596742551,
+        "z": -0.8368284673785414,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.6530498533724334,
+        "tmax_z": 0.5717272510826997,
+        "precip_anomaly_mm": -1.3304985337243407,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -10.193813967625003,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:putnam",
+      "kind": "county",
+      "name": "Putnam",
+      "state": "MO",
+      "lat": 40.478606,
+      "lon": -93.014531,
+      "ndvi": {
+        "value": 0.36528142298580124,
+        "baseline_mu": 0.6031259627651012,
+        "baseline_sigma": 0.05742668864443623,
+        "z": -4.141707373237922,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.21844574780057613,
+        "tmax_z": 0.06617080240669242,
+        "precip_anomaly_mm": 0.1081378299120237,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6406464510854654,
+        "r_prcp_yield": 0.018268267480437108,
+        "n_years": 14,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -9.109323036654947,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:ralls",
+      "kind": "county",
+      "name": "Ralls",
+      "state": "MO",
+      "lat": 39.553455,
+      "lon": -91.524787,
+      "ndvi": {
+        "value": 0.3408833137912618,
+        "baseline_mu": 0.5701479124198315,
+        "baseline_sigma": 0.055906965352464644,
+        "z": -4.1008235232081445,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.4446774193548393,
+        "tmax_z": 0.13688438922521118,
+        "precip_anomaly_mm": -2.050791788856304,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.69321136727149,
+        "r_prcp_yield": 0.4164694556585666,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.528493495008943,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:randolph",
+      "kind": "county",
+      "name": "Randolph",
+      "state": "MO",
+      "lat": 39.439249,
+      "lon": -92.492959,
+      "ndvi": {
+        "value": 0.4156497105249966,
+        "baseline_mu": 0.5939598940510098,
+        "baseline_sigma": 0.05601232512174537,
+        "z": -3.183409778802215,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.9479032258064528,
+        "tmax_z": 0.2901058276223507,
+        "precip_anomaly_mm": -2.1185337243401765,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7016248492910349,
+        "r_prcp_yield": 0.3024256350881136,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.787087226760523,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:ray",
+      "kind": "county",
+      "name": "Ray",
+      "state": "MO",
+      "lat": 39.308401,
+      "lon": -93.995746,
+      "ndvi": {
+        "value": 0.31530361914588534,
+        "baseline_mu": 0.5439604675439867,
+        "baseline_sigma": 0.04255718071493708,
+        "z": -5.372932242145577,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.6352492668621714,
+        "tmax_z": 0.19462237633787208,
+        "precip_anomaly_mm": -2.3071700879765396,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7198087691962561,
+        "r_prcp_yield": 0.2689822675653736,
+        "n_years": 20,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -13.031409836942748,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:reynolds",
+      "kind": "county",
+      "name": "Reynolds",
+      "state": "MO",
+      "lat": 37.366464,
+      "lon": -90.972282,
+      "ndvi": null,
+      "weather": {
+        "tmax_anomaly_c": 1.1436950146627645,
+        "tmax_z": 0.3869813085322185,
+        "precip_anomaly_mm": -0.7491202346041059,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -10.98630709379124,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:ripley",
+      "kind": "county",
+      "name": "Ripley",
+      "state": "MO",
+      "lat": 36.65017,
+      "lon": -90.874834,
+      "ndvi": {
+        "value": 0.26595942808300727,
+        "baseline_mu": 0.7402616773709572,
+        "baseline_sigma": 0.07108294249753136,
+        "z": -6.672518506172166,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.5337536656891473,
+        "tmax_z": 0.2008727646863933,
+        "precip_anomaly_mm": -0.23570381231671655,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -10.014718143671189,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:st. charles",
+      "kind": "county",
+      "name": "St. Charles",
+      "state": "MO",
+      "lat": 38.781102,
+      "lon": -90.674915,
+      "ndvi": null,
+      "weather": null,
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -11.836772321784292,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:st. clair",
+      "kind": "county",
+      "name": "St. Clair",
+      "state": "MO",
+      "lat": 38.04223,
+      "lon": -93.77656,
+      "ndvi": null,
+      "weather": null,
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -13.10741464025833,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:ste. genevieve",
+      "kind": "county",
+      "name": "Ste. Genevieve",
+      "state": "MO",
+      "lat": 37.885845,
+      "lon": -90.161531,
+      "ndvi": null,
+      "weather": null,
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -12.067038850253336,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:st. francois",
+      "kind": "county",
+      "name": "St. Francois",
+      "state": "MO",
+      "lat": 37.810707,
+      "lon": -90.473868,
+      "ndvi": null,
+      "weather": null,
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -11.786051933648093,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:st. louis",
+      "kind": "county",
+      "name": "St. Louis",
+      "state": "MO",
+      "lat": 38.640688,
+      "lon": -90.446073,
+      "ndvi": null,
+      "weather": null,
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -14.173707562611284,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:saline",
+      "kind": "county",
+      "name": "Saline",
+      "state": "MO",
+      "lat": 39.13584,
+      "lon": -93.204164,
+      "ndvi": {
+        "value": 0.3069690399005951,
+        "baseline_mu": 0.46384500008054963,
+        "baseline_sigma": 0.04361791279523438,
+        "z": -3.596594842041468,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.2410263929618743,
+        "tmax_z": 0.3840283305750065,
+        "precip_anomaly_mm": -2.8890909090909096,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7226282798679955,
+        "r_prcp_yield": 0.29488167476929006,
+        "n_years": 21,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.643406165163366,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:schuyler",
+      "kind": "county",
+      "name": "Schuyler",
+      "state": "MO",
+      "lat": 40.469361,
+      "lon": -92.519016,
+      "ndvi": {
+        "value": 0.3515276047516668,
+        "baseline_mu": 0.6230127183044637,
+        "baseline_sigma": 0.053326500854521855,
+        "z": -5.090998081674735,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.19931085043988261,
+        "tmax_z": 0.06001264982933418,
+        "precip_anomaly_mm": -0.41835777126099716,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.2931984538134847,
+        "r_prcp_yield": -0.46690295477759414,
+        "n_years": 12,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -9.873146282260041,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:scotland",
+      "kind": "county",
+      "name": "Scotland",
+      "state": "MO",
+      "lat": 40.447686,
+      "lon": -92.142824,
+      "ndvi": {
+        "value": 0.3510091132634618,
+        "baseline_mu": 0.5354825481153284,
+        "baseline_sigma": 0.04411573012212104,
+        "z": -4.1815795486373615,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": -0.004794721407620273,
+        "tmax_z": -0.0014553045288784561,
+        "precip_anomaly_mm": 0.6125073313782989,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6662294519663605,
+        "r_prcp_yield": -0.18456942481698257,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.037702953219116,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:scott",
+      "kind": "county",
+      "name": "Scott",
+      "state": "MO",
+      "lat": 37.047793,
+      "lon": -89.568098,
+      "ndvi": {
+        "value": 0.3634693509175919,
+        "baseline_mu": 0.5094542318459895,
+        "baseline_sigma": 0.028783651165930856,
+        "z": -5.071798573670508,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.6325953079178852,
+        "tmax_z": 0.23597237267129714,
+        "precip_anomaly_mm": -2.3391495601173022,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.42294454620164845,
+        "r_prcp_yield": 0.25210398911571236,
+        "n_years": 19,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -12.703017934047017,
+        "as_of": "2026-04-11"
+      }
+    },
+    {
+      "id": "county:mo:shannon",
+      "kind": "county",
+      "name": "Shannon",
+      "state": "MO",
+      "lat": 37.152498,
+      "lon": -91.391328,
+      "ndvi": null,
+      "weather": {
+        "tmax_anomaly_c": 1.1728885630498525,
+        "tmax_z": 0.3983568036022432,
+        "precip_anomaly_mm": -0.4488709677419358,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -11.659725286838757,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:shelby",
+      "kind": "county",
+      "name": "Shelby",
+      "state": "MO",
+      "lat": 39.797531,
+      "lon": -92.088719,
+      "ndvi": {
+        "value": 0.37006862950421693,
+        "baseline_mu": 0.5327436149769297,
+        "baseline_sigma": 0.05386089654188946,
+        "z": -3.020279941797754,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.47042521994134745,
+        "tmax_z": 0.14369859007024513,
+        "precip_anomaly_mm": -2.380454545454546,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7211489909133574,
+        "r_prcp_yield": 0.3183101600646876,
+        "n_years": 19,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -10.511412701288211,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:stoddard",
+      "kind": "county",
+      "name": "Stoddard",
+      "state": "MO",
+      "lat": 36.851557,
+      "lon": -89.947481,
+      "ndvi": {
+        "value": 0.3144642064742855,
+        "baseline_mu": 0.5074428581048295,
+        "baseline_sigma": 0.03258390195311975,
+        "z": -5.922515109092611,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.4459824046920886,
+        "tmax_z": 0.1689446234083574,
+        "precip_anomaly_mm": -1.9479472140762464,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.5975991169487732,
+        "r_prcp_yield": 0.45418125740541,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -9.945049653073184,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:stone",
+      "kind": "county",
+      "name": "Stone",
+      "state": "MO",
+      "lat": 36.745822,
+      "lon": -93.457842,
+      "ndvi": {
+        "value": 0.5235027832836525,
+        "baseline_mu": 0.7109751124886219,
+        "baseline_sigma": 0.06279376370586738,
+        "z": -2.9855246467325887,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.8223753665689024,
+        "tmax_z": 0.29037704409971443,
+        "precip_anomaly_mm": -1.1166568914956012,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -13.195467259122143,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:sullivan",
+      "kind": "county",
+      "name": "Sullivan",
+      "state": "MO",
+      "lat": 40.209587,
+      "lon": -93.109783,
+      "ndvi": {
+        "value": 0.3821671790292905,
+        "baseline_mu": 0.6187022889859627,
+        "baseline_sigma": 0.05709566352822389,
+        "z": -4.142785902466072,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.24577712609971059,
+        "tmax_z": 0.0753400704508196,
+        "precip_anomaly_mm": -1.099178885630498,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6022823252918938,
+        "r_prcp_yield": 0.23563043100234987,
+        "n_years": 19,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -8.94007587380365,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:taney",
+      "kind": "county",
+      "name": "Taney",
+      "state": "MO",
+      "lat": 36.649827,
+      "lon": -93.042819,
+      "ndvi": null,
+      "weather": {
+        "tmax_anomaly_c": 1.5918181818181871,
+        "tmax_z": 0.5383535141250688,
+        "precip_anomaly_mm": -0.24609970674486847,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -14.33796951206634,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:texas",
+      "kind": "county",
+      "name": "Texas",
+      "state": "MO",
+      "lat": 37.314257,
+      "lon": -91.964478,
+      "ndvi": {
+        "value": 0.6058798197608145,
+        "baseline_mu": 0.7002372990678352,
+        "baseline_sigma": 0.07143276784023964,
+        "z": -1.320927106143394,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.3093255131964803,
+        "tmax_z": 0.4589995774918762,
+        "precip_anomaly_mm": -0.747302052785924,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -10.89012635102014,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:vernon",
+      "kind": "county",
+      "name": "Vernon",
+      "state": "MO",
+      "lat": 37.850196,
+      "lon": -94.341597,
+      "ndvi": {
+        "value": 0.43516764215886045,
+        "baseline_mu": 0.6464887890042079,
+        "baseline_sigma": 0.04257506780491134,
+        "z": -4.963495250639861,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.9242228739002947,
+        "tmax_z": 0.3243058910679092,
+        "precip_anomaly_mm": -2.342683284457478,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.7543720018179499,
+        "r_prcp_yield": 0.3648119371834187,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -12.980674508069631,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:warren",
+      "kind": "county",
+      "name": "Warren",
+      "state": "MO",
+      "lat": 38.761902,
+      "lon": -91.159306,
+      "ndvi": {
+        "value": 0.3990485664448749,
+        "baseline_mu": 0.6742571144760248,
+        "baseline_sigma": 0.08392845381638311,
+        "z": -3.2790851673884673,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.9697214076246397,
+        "tmax_z": 0.3143612354308478,
+        "precip_anomaly_mm": -0.6395161290322582,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6803080924780807,
+        "r_prcp_yield": 0.5547474514520989,
+        "n_years": 21,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.002550979301645,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:washington",
+      "kind": "county",
+      "name": "Washington",
+      "state": "MO",
+      "lat": 37.942611,
+      "lon": -90.897018,
+      "ndvi": null,
+      "weather": {
+        "tmax_anomaly_c": 1.5772873900293263,
+        "tmax_z": 0.5179868149248714,
+        "precip_anomaly_mm": -0.9476979472140759,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -10.793770384510035,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:wayne",
+      "kind": "county",
+      "name": "Wayne",
+      "state": "MO",
+      "lat": 37.111074,
+      "lon": -90.453931,
+      "ndvi": {
+        "value": 0.5209010202944317,
+        "baseline_mu": 0.750775958372643,
+        "baseline_sigma": 0.07874076161035705,
+        "z": -2.9193893147202554,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-19"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.7542082111436912,
+        "tmax_z": 0.27318220792226205,
+        "precip_anomaly_mm": -1.3566862170087979,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6694367543451678,
+        "r_prcp_yield": 0.45701050098664997,
+        "n_years": 13,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -11.347889654953747,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:webster",
+      "kind": "county",
+      "name": "Webster",
+      "state": "MO",
+      "lat": 37.280804,
+      "lon": -92.87608,
+      "ndvi": {
+        "value": 0.6091423177486476,
+        "baseline_mu": 0.7038425998461735,
+        "baseline_sigma": 0.06209958286648833,
+        "z": -1.5249745284300507,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.7550439882698008,
+        "tmax_z": 0.25917362005161143,
+        "precip_anomaly_mm": -1.6484017595307918,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6857639457227545,
+        "r_prcp_yield": 0.28263809155384084,
+        "n_years": 17,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -9.890282213441207,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:worth",
+      "kind": "county",
+      "name": "Worth",
+      "state": "MO",
+      "lat": 40.480499,
+      "lon": -94.419198,
+      "ndvi": {
+        "value": 0.3315051880513279,
+        "baseline_mu": 0.5633140798769388,
+        "baseline_sigma": 0.055948736757861314,
+        "z": -4.14323727859753,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 0.08093841642228838,
+        "tmax_z": 0.025347989275573624,
+        "precip_anomaly_mm": 0.4450439882697945,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": {
+        "r_tmax_yield": -0.6189463706705796,
+        "r_prcp_yield": 0.2775674691433068,
+        "n_years": 22,
+        "source": "figures/real/daymet_correlation_per_county.parquet"
+      },
+      "sar_vv_db": {
+        "value": -14.111761866668711,
+        "as_of": "2026-03-29"
+      }
+    },
+    {
+      "id": "county:mo:wright",
+      "kind": "county",
+      "name": "Wright",
+      "state": "MO",
+      "lat": 37.267633,
+      "lon": -92.479989,
+      "ndvi": {
+        "value": 0.7005664904159276,
+        "baseline_mu": 0.7150948919502411,
+        "baseline_sigma": 0.06528971752249103,
+        "z": -0.2225220461293742,
+        "n_baseline_years": 23,
+        "as_of": "2026-04-20"
+      },
+      "weather": {
+        "tmax_anomaly_c": 1.3269354838709653,
+        "tmax_z": 0.4749145501411951,
+        "precip_anomaly_mm": 0.044970674486803475,
+        "baseline_years": 22,
+        "as_of": "2023-07"
+      },
+      "yield_sensitivity": null,
+      "sar_vv_db": {
+        "value": -10.720925725653121,
+        "as_of": "2026-04-17"
+      }
+    },
+    {
+      "id": "county:mo:st. louis city",
+      "kind": "county",
+      "name": "St. Louis City",
+      "state": "MO",
+      "lat": 38.635699,
+      "lon": -90.244582,
+      "ndvi": null,
+      "weather": null,
+      "yield_sensitivity": null,
+      "sar_vv_db": null
+    }
+  ]
+}
