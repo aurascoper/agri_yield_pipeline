@@ -43,6 +43,38 @@ JULY_DOY = 182         # July 1 on a non-leap year
 JULY_WINDOW = 15       # July anomaly window: DOY 182 +/- 15 (~mid-June to mid-August)
 MIN_BASELINE_YEARS = 3
 
+INTENDED_REFRESH_CADENCE_DAYS = 7   # the weekly cadence .github/workflows/refresh_counties.yml
+                                     # was supposed to run at, before it started failing
+STALENESS_OVERDUE_MULTIPLE = 4      # ~28 days' grace beyond the intended cadence -- arbitrary but
+                                     # explicit, chosen knowing the data is already ~130 days
+                                     # overdue (so the exact multiplier changes nothing about
+                                     # today's verdict); fixed now for when the automation is
+                                     # working again and staleness needs a real trigger point
+                                     # rather than being permanently tripped by definition
+
+# The 17 counties with no MODIS row-crop NDVI baseline file are not a uniform gap. St. Louis City
+# is confirmed structurally, permanently null -- an independent city with no cropland and no USDA
+# yield series by definition, not a county that happens to be missing data today. The other 16 are
+# a related but distinct case (primarily southern Ozark forested counties + St. Louis-metro urban
+# counties with near-zero row-crop cropland in the current MODIS export) -- currently absent,
+# plausibly persistent, but not established here as permanently impossible the way St. Louis City
+# is, so they get a different, less certain reason.
+NDVI_UNAVAILABLE_REASONS = {
+    "st. louis city": "no_cropland",  # confirmed structural: a city, not agricultural land
+}
+NDVI_UNAVAILABLE_DEFAULT_REASON = "no_baseline_file"  # currently absent; not confirmed permanent
+
+COUNTY_SET_NOTE = (
+    "115 MO county centroids (data/real/mo_county_centroids.parquet) is this overlay's canonical "
+    "county set. USDA's 116-row commodity table includes 2 non-county privacy-disclosure "
+    "aggregate rows ('other counties', 'other (combined) counties'), leaving 114 real counties; "
+    "this overlay's 115 = those 114 + St. Louis City (an independent city-equivalent with no "
+    "county-level ag yield data of its own, correctly absent from USDA's series). The 85-county "
+    "correlation table and 97-county trained model are genuinely narrower, filter-driven subsets "
+    "(>=10 paired Daymet+yield years; sufficient model-training rows) -- a county absent from "
+    "yield_sensitivity or the trained model is not necessarily 'missing' from this overlay."
+)
+
 
 def sha256_hex(obj) -> str:
     blob = json.dumps(obj, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -179,6 +211,10 @@ def build_cells() -> list[dict]:
                 "n_baseline_years": n,
                 "as_of": obs["as_of"],
             }
+        else:
+            cell["ndvi_unavailable_reason"] = NDVI_UNAVAILABLE_REASONS.get(
+                county, NDVI_UNAVAILABLE_DEFAULT_REASON
+            )
 
         daymet = county_daymet(county)
         if daymet is not None:
@@ -201,18 +237,41 @@ def build_cells() -> list[dict]:
     return cells
 
 
+def _refresh_status(cells: list[dict]) -> dict:
+    """Staleness relative to the intended weekly refresh cadence -- a separate, export-time
+    computation from the display-layer freshness model (REFERENCE stays 'never stale by clock' by
+    design; this is a policy on top of that, specific to a source that was supposed to be live and
+    got stuck when its automation broke)."""
+    obs_dates = [
+        c["ndvi"]["as_of"] for c in cells if c.get("ndvi")
+    ] + [
+        c["sar_vv_db"]["as_of"] for c in cells if c.get("sar_vv_db")
+    ]
+    if not obs_dates:
+        return {"staleness_days": None, "refresh_status": "unknown"}
+    latest_obs = max(datetime.strptime(d, "%Y-%m-%d").replace(tzinfo=timezone.utc) for d in obs_dates)
+    staleness_days = (datetime.now(timezone.utc) - latest_obs).days
+    overdue_threshold = INTENDED_REFRESH_CADENCE_DAYS * STALENESS_OVERDUE_MULTIPLE
+    return {
+        "staleness_days": staleness_days,
+        "intended_refresh_cadence_days": INTENDED_REFRESH_CADENCE_DAYS,
+        "overdue_threshold_days": overdue_threshold,
+        "refresh_status": "overdue" if staleness_days > overdue_threshold else "current",
+    }
+
+
 def main() -> int:
     OVERLAY_DIR.mkdir(parents=True, exist_ok=True)
     cells = build_cells()
-    cells_hash = sha256_hex(cells)
     generated_at = datetime.now(timezone.utc).isoformat()
+    refresh = _refresh_status(cells)
 
     payload = {
-        "schema_version": 1,
+        "schema_version": 2,
         "source_repo": "agri_yield_pipeline",
         "source_git_sha": git_head_sha(),
         "generated_at": generated_at,
-        "cells_sha256": cells_hash,
+        "county_set_note": COUNTY_SET_NOTE,
         "provenance": {
             "ndvi": {
                 "class": "reference",
@@ -223,11 +282,13 @@ def main() -> int:
                     "installs python-dotenv. This is a one-time manual export, not a live feed."
                 ),
                 "vintage_field": "per-cell ndvi.as_of",
+                **refresh,
             },
             "sar": {
                 "class": "reference",
                 "note": "Same broken-automation caveat as ndvi -- see provenance.ndvi.note.",
                 "vintage_field": "per-cell sar_vv_db.as_of",
+                **refresh,
             },
             "weather": {
                 "class": "reference",
@@ -248,7 +309,11 @@ def main() -> int:
         "cells": cells,
     }
 
-    fname = f"agri_physical_overlay_{generated_at[:10]}_{cells_hash[:12]}.json"
+    # Hash the whole payload minus the hash field itself, computed last -- covers generated_at,
+    # source_git_sha, and provenance too, not just cells. A hash scoped to cells alone would let a
+    # corrupted/edited generated_at or source_git_sha pass verification untouched.
+    payload["payload_sha256"] = sha256_hex(payload)
+    fname = f"agri_physical_overlay_{generated_at[:10]}_{payload['payload_sha256'][:12]}.json"
     path = OVERLAY_DIR / fname
     path.write_text(json.dumps(payload, indent=2, sort_keys=False, allow_nan=False) + "\n")
 
@@ -269,6 +334,7 @@ def main() -> int:
     with_sensitivity = sum(1 for c in cells if c["yield_sensitivity"] is not None)
     with_sar = sum(1 for c in cells if c["sar_vv_db"] is not None)
     print(f"ndvi={with_ndvi} weather={with_weather} yield_sensitivity={with_sensitivity} sar={with_sar}")
+    print(f"refresh_status={refresh.get('refresh_status')} staleness_days={refresh.get('staleness_days')}")
     return 0
 
 
